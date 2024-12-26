@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+    app:
+        image: gradle:jdk17-corretto
+        container_name: backend-admin-video-catalog-app
+        tty: true
+        command: tail -f /dev/null
+        volumes:
+            - ./app:/home/gradle
+        networks:
+            - backend-admin-video-catalog-network
+
+networks:
+    backend-admin-video-catalog-network:
+        driver: bridge

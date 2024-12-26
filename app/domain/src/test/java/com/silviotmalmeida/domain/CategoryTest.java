@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class CategoryTest {
 
     @Test
-    public void testNewCategory(){
+    public void testNewCategory() {
 
         Assertions.assertNotNull(new Category());
 

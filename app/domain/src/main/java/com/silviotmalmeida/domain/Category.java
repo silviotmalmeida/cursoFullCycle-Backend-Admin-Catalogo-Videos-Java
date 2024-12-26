@@ -4,8 +4,6 @@ package com.silviotmalmeida.domain;
 // definindo a entidade
 public class Category {
 
-//    atributos
+    // atributos
     public String id;
-
-
 }
