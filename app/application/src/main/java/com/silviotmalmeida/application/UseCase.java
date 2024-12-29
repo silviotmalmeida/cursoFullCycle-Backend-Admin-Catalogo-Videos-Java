@@ -1,11 +1,13 @@
 // definição do package
 package com.silviotmalmeida.application;
 
-import com.silviotmalmeida.domain.Category;
+import com.silviotmalmeida.domain.category.Category;
 
 // definindo a entidade
 public class UseCase {
 
-    //    atributos
-    public Category category;
+    //    métodos
+    public Category execute() {
+        return Category.newCategory("name", "description", false);
+    }
 }

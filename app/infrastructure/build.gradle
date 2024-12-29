@@ -10,6 +10,11 @@ repositories {
 }
 
 dependencies {
+    // incluindo a dependência para o módulo domain
+    implementation(project(":domain"))
+    // incluindo a dependência para o módulo application
+    implementation(project(":application"))
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
