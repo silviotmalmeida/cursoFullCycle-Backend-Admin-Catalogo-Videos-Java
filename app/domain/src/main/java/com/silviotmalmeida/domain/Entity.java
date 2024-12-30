@@ -1,6 +1,8 @@
 // definição do package
 package com.silviotmalmeida.domain;
 
+import com.silviotmalmeida.domain.validation.ValidationHandler;
+
 import java.util.Objects;
 
 // classe abstrata a ser estendida pelas entidades
@@ -17,6 +19,9 @@ public abstract class Entity<ID extends Identifier> {
         // atribuições
         this.id = id;
     }
+
+    // método de autovalidação
+    public abstract void validate(ValidationHandler handler);
 
     //getters
     public ID getId() {

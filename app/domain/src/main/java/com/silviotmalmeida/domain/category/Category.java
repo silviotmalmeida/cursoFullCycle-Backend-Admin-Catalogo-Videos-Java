@@ -2,9 +2,9 @@
 package com.silviotmalmeida.domain.category;
 
 import com.silviotmalmeida.domain.AggregateRoot;
+import com.silviotmalmeida.domain.validation.ValidationHandler;
 
 import java.time.Instant;
-import java.util.UUID;
 
 // definindo a entidade
 public class Category extends AggregateRoot<CategoryID> {
@@ -48,6 +48,12 @@ public class Category extends AggregateRoot<CategoryID> {
         final Instant now = Instant.now();
         // criando o objeto
         return new Category(id, aName, aDescription, aIsActive, now, now, null);
+    }
+
+    // método de autovalidação
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new CategoryValidator(this, handler).validate();
     }
 
     // getters
