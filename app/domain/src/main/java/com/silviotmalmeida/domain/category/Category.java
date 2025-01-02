@@ -46,14 +46,38 @@ public class Category extends AggregateRoot<CategoryID> {
         final CategoryID id = CategoryID.unique();
         // obtendo o instant da criação
         final Instant now = Instant.now();
+        // definindo o deletedAt
+        final Instant deletedAt = aIsActive ? null : now;
         // criando o objeto
-        return new Category(id, aName, aDescription, aIsActive, now, now, null);
+        return new Category(id, aName, aDescription, aIsActive, now, now, deletedAt);
     }
 
     // método de autovalidação
     @Override
     public void validate(final ValidationHandler handler) {
         new CategoryValidator(this, handler).validate();
+    }
+
+    // método de desativação
+    public Category deactivate() {
+        this.isActive = false;
+        Instant now = Instant.now();
+        this.updatedAt = now;
+        if (this.getDeletedAt() == null) {
+            this.deletedAt = now;
+        }
+        return this;
+    }
+
+    // método de ativação
+    public Category activate() {
+        this.isActive = true;
+        Instant now = Instant.now();
+        this.updatedAt = now;
+        if (this.getDeletedAt() != null) {
+            this.deletedAt = null;
+        }
+        return this;
     }
 
     // getters
