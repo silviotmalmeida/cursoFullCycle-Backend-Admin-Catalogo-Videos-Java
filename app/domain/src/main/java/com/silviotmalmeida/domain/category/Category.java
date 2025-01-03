@@ -80,6 +80,19 @@ public class Category extends AggregateRoot<CategoryID> {
         return this;
     }
 
+    // método de atualização geral
+    public Category update(final String name, final String description, final boolean isActive) {
+        this.name = name;
+        this.description = description;
+        this.updatedAt = Instant.now();
+        if (isActive) {
+            activate();
+        } else {
+            deactivate();
+        }
+        return this;
+    }
+
     // getters
     public CategoryID getId() {
         return id;

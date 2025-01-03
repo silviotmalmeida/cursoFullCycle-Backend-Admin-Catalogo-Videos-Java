@@ -23,6 +23,7 @@ public class CategoryValidator extends Validator {
     // método de validação
     @Override
     public void validate() {
+
         validateName();
     }
 
