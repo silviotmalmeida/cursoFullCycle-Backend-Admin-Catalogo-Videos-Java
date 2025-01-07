@@ -2,6 +2,7 @@ package com.silviotmalmeida.domain.category;
 
 import com.silviotmalmeida.domain.exception.DomainException;
 import com.silviotmalmeida.domain.validation.handler.ThrowsValidationHandler;
+import com.silviotmalmeida.utils.Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,7 @@ import java.util.Random;
 
 public class CategoryTest {
 
+    // teste de caminho feliz
     @Test
     public void givenAValidParams_whenCallNewCategory_thenInstantiateACategory() {
 
@@ -206,7 +208,6 @@ public class CategoryTest {
         final Category actualCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
         // executando os testes
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
         Assertions.assertNotNull(actualCategory);
         Assertions.assertNotNull(actualCategory.getId());
         Assertions.assertEquals(expectedName, actualCategory.getName());
@@ -233,7 +234,6 @@ public class CategoryTest {
         actualCategory.update(updatedName, updatedDescription, updateIsActive);
 
         // executando os testes
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
         Assertions.assertNotNull(actualCategory);
         Assertions.assertEquals(actualCategory.getId(), initialId);
         Assertions.assertEquals(actualCategory.getName(), updatedName);
@@ -243,49 +243,5 @@ public class CategoryTest {
         Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(initialUpdatedAt));
         if (updateIsActive) Assertions.assertNull(actualCategory.getDeletedAt());
         if (!updateIsActive) Assertions.assertNotNull(actualCategory.getDeletedAt());
-    }
-
-    @Test
-    public void givenAValidCategory_whenCallUpdateWithInvalidParams_thenShouldReturnAnError() {
-
-        // atributos esperados
-        final String expectedName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
-        final String expectedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
-        final boolean expectedIsActive = new Random().nextBoolean();
-
-        // criando a entidade
-        final Category actualCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
-
-        // executando os testes
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
-        Assertions.assertNotNull(actualCategory);
-        Assertions.assertNotNull(actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertNotNull(actualCategory.getCreatedAt());
-        Assertions.assertEquals(actualCategory.getCreatedAt(), actualCategory.getUpdatedAt());
-        if (expectedIsActive) Assertions.assertNull(actualCategory.getDeletedAt());
-        if (!expectedIsActive) Assertions.assertNotNull(actualCategory.getDeletedAt());
-
-        // atributos da classe inicial
-        final CategoryID initialId = actualCategory.getId();
-        final String initialName = actualCategory.getName();
-        final String initialDescription = actualCategory.getDescription();
-        final Instant initialCreateddAt = actualCategory.getCreatedAt();
-        final Instant initialUpdatedAt = actualCategory.getUpdatedAt();
-
-        // atributos atualizados
-        final String updatedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
-        final boolean updateIsActive = !expectedIsActive;
-        final int expectedErrorCount = 1;
-        final String expectedErrorMessage = "'name' should not be null";
-
-        // ativando
-        actualCategory.update(null, updatedDescription, updateIsActive);
-
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
     }
 }

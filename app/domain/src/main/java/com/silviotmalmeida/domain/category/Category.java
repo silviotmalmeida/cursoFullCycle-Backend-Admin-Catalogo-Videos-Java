@@ -38,18 +38,18 @@ public class Category extends AggregateRoot<CategoryID> {
 
     // factory method para permitir a contrução dos objetos
     public static Category newCategory(
-            final String aName,
-            final String aDescription,
-            final boolean aIsActive
+            final String name,
+            final String description,
+            final boolean isActive
     ) {
         // criando o id
         final CategoryID id = CategoryID.unique();
         // obtendo o instant da criação
         final Instant now = Instant.now();
         // definindo o deletedAt
-        final Instant deletedAt = aIsActive ? null : now;
+        final Instant deletedAt = isActive ? null : now;
         // criando o objeto
-        return new Category(id, aName, aDescription, aIsActive, now, now, deletedAt);
+        return new Category(id, name, description, isActive, now, now, deletedAt);
     }
 
     // método de autovalidação

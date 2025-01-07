@@ -1,0 +1,8 @@
+- ordem de implementação das classes
+    - domain
+      - entidades;
+      - repositoryInterface da entidade;
+
+    - application
+      - usecases, input e output;
+  

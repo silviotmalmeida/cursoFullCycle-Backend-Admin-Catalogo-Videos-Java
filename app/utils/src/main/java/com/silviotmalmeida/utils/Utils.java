@@ -1,5 +1,5 @@
-// definição do package
-package com.silviotmalmeida.domain.category;
+// definição do pacote
+package com.silviotmalmeida.utils;
 
 // classe com métodos úteis para os testes
 public class Utils {
