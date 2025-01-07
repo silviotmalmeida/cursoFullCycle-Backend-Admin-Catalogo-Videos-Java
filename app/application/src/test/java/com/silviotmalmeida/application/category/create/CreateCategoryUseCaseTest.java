@@ -2,21 +2,33 @@
 package com.silviotmalmeida.application.category.create;
 
 import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.exception.DomainException;
 import com.silviotmalmeida.utils.Utils;
-import com.silviotmalmeida.domain.category.Category;
-import com.silviotmalmeida.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Random;
 
+@ExtendWith(MockitoExtension.class)
 public class CreateCategoryUseCaseTest {
+
+    // definindo o usecase que vai receber o mock do repository
+    @InjectMocks
+    private DefaultCreateCategoryUseCase usecase;
+
+    // definindo o mock do repository
+    @Mock
+    private CategoryRepositoryInterface repository;
 
     // teste de caminho feliz
     @Test
-    public void givenValidInput_whenCallsCreateCategory_shouldReturnValidOutput(){
+    public void givenValidInput_whenCallsCreateCategory_shouldReturnValidOutput() {
 
         // atributos esperados
         final String expectedName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
@@ -26,12 +38,10 @@ public class CreateCategoryUseCaseTest {
         // criando o input
         final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
-        // criando o mock do repository
-        final CategoryRepositoryInterface repository = Mockito.mock(CategoryRepositoryInterface.class);
+        // definindo o comportamento do create (recebe qualquer coisa e retorna o primeiro argumento passado ao método)
         Mockito.when(repository.create(Mockito.any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
-        // criando o usecase
-        final CreateCategoryUseCase usecase = new DefaultCreateCategoryUseCase(repository);
+        // executando o usecase
         final CreateCategoryOutput output = usecase.execute(input);
 
         // executando os testes
@@ -44,6 +54,51 @@ public class CreateCategoryUseCaseTest {
         Assertions.assertNotNull(output.category().getUpdatedAt());
         if (expectedIsActive) Assertions.assertNull(output.category().getDeletedAt());
         if (!expectedIsActive) Assertions.assertNotNull(output.category().getDeletedAt());
+
+        Mockito.verify(repository, Mockito.times(1)).create(Mockito.any());
+    }
+
+    // teste de name inválido
+    @Test
+    public void givenNullNameInput_whenCallsCreateCategory_thenReturnAnDomainException() {
+
+        // atributos esperados
+        final String expectedName = null;
+        final String expectedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean expectedIsActive = new Random().nextBoolean();
+        final int expectedErrorCount = 1;
+        final String expectedErrorMessage = "'name' should not be null";
+
+        // criando o input
+        final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
+
+        // executando os testes
+        final var actualException = Assertions.assertThrows(DomainException.class, () -> usecase.execute(input));
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+
+        Mockito.verify(repository, Mockito.times(0)).create(Mockito.any());
+    }
+
+    // teste de erro interno do repository
+    @Test
+    public void givenValidInput_whenRepositoryThrowsException_shouldReturnException() {
+
+        // atributos esperados
+        final String expectedName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String expectedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean expectedIsActive = new Random().nextBoolean();
+        final String expectedErrorMessage = "Repository error";
+
+        // criando o input
+        final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
+
+        // definindo o comportamento do create (recebe qualquer coisa e retorna o primeiro argumento passado ao método)
+        Mockito.when(repository.create(Mockito.any())).thenThrow(new IllegalStateException(expectedErrorMessage));
+
+        // executando os testes
+        final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> usecase.execute(input));
+        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
 
         Mockito.verify(repository, Mockito.times(1)).create(Mockito.any());
     }
