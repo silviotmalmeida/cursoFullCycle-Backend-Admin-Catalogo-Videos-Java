@@ -13,7 +13,6 @@ public class CategoryValidator extends Validator {
     // atributos
     private final Category category;
 
-
     // construtor
     public CategoryValidator(final Category category, final ValidationHandler handler) {
         super(handler);

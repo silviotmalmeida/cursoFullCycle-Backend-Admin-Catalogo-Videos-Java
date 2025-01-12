@@ -5,4 +5,6 @@
 
     - application
       - usecases, input e output;
-  
+
+
+- para incluir o mockito no projeto deve-se incluir no build.gradle a seguinte linha: testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'  
