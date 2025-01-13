@@ -12,7 +12,7 @@ import java.util.List;
 public class NotificationValidationHandler implements ValidationHandler {
 
     // atributos
-    private List<Error> errors;
+    private final List<Error> errors;
 
     // construtor
     private NotificationValidationHandler(final List<Error> errors) {
@@ -45,13 +45,6 @@ public class NotificationValidationHandler implements ValidationHandler {
     @Override
     public NotificationValidationHandler append(final ValidationHandler handler) {
         this.errors.addAll(handler.getErrors());
-        return this;
-    }
-
-    // valida
-    @Override
-    public NotificationValidationHandler validate(final Validation validation) {
-        validation.validate();
         return this;
     }
 

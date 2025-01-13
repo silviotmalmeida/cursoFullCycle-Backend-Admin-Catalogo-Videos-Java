@@ -22,18 +22,6 @@ public class ThrowsValidationHandler implements ValidationHandler {
         throw DomainException.with(handler.getErrors());
     }
 
-    // valida
-    @Override
-    public ValidationHandler validate(final Validation validation) {
-        try {
-            validation.validate();
-        } catch (Exception exception) {
-            throw DomainException.with(new Error(exception.getMessage()));
-        }
-
-        return this;
-    }
-
     // retorna a lista de erros contidos no handler
     @Override
     public List<Error> getErrors() {

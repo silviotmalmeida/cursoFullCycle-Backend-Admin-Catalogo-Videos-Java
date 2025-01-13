@@ -36,7 +36,7 @@ public class Category extends AggregateRoot<CategoryID> {
         this.deletedAt = deletedAt;
     }
 
-    // factory method para permitir a contrução dos objetos
+    // factory method para permitir a contrução dos objetos novos
     public static Category newCategory(
             final String name,
             final String description,
@@ -44,6 +44,21 @@ public class Category extends AggregateRoot<CategoryID> {
     ) {
         // criando o id
         final CategoryID id = CategoryID.unique();
+        // obtendo o instant da criação
+        final Instant now = Instant.now();
+        // definindo o deletedAt
+        final Instant deletedAt = isActive ? null : now;
+        // criando o objeto
+        return new Category(id, name, description, isActive, now, now, deletedAt);
+    }
+
+    // factory method para permitir a contrução dos objetos já com id definido
+    public static Category newCategory(
+            final CategoryID id,
+            final String name,
+            final String description,
+            final boolean isActive
+    ) {
         // obtendo o instant da criação
         final Instant now = Instant.now();
         // definindo o deletedAt

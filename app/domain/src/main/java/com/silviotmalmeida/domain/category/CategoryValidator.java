@@ -32,25 +32,22 @@ public class CategoryValidator extends Validator {
         // name não pode ser nulo
         if (this.category.getName() == null) {
             this.getHandler().append(new Error("'name' should not be null"));
-            return;
-        }
+        } else {
 
-        // name não pode ser vazio
-        if (this.category.getName().isBlank()) {
-            this.getHandler().append(new Error("'name' should not be empty"));
-            return;
-        }
+            // name não pode ser vazio
+            if (this.category.getName().isBlank()) {
+                this.getHandler().append(new Error("'name' should not be empty"));
+            }
 
-        // name não pode ser menor que 3, removendo os espaços em branco
-        if (this.category.getName().trim().length() < 3) {
-            this.getHandler().append(new Error("'name' must be between 3 and 255 characters"));
-            return;
-        }
+            // name não pode ser menor que 3, removendo os espaços em branco
+            if (this.category.getName().trim().length() < 3) {
+                this.getHandler().append(new Error("'name' must be between 3 and 255 characters"));
+            }
 
-        // name não pode ser maior que 255
-        if (this.category.getName().length() > 255) {
-            this.getHandler().append(new Error("'name' must be between 3 and 255 characters"));
-            return;
+            // name não pode ser maior que 255
+            if (this.category.getName().length() > 255) {
+                this.getHandler().append(new Error("'name' must be between 3 and 255 characters"));
+            }
         }
     }
 }

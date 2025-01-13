@@ -12,9 +12,6 @@ public interface ValidationHandler {
     // insere o conteúdo de um handler em outro
     ValidationHandler append(ValidationHandler handler);
 
-    // valida
-    ValidationHandler validate(Validation validation);
-
     // retorna a lista de erros contidos no handler
     List<Error> getErrors();
 
@@ -23,8 +20,9 @@ public interface ValidationHandler {
         return getErrors() != null && !getErrors().isEmpty();
     }
 
-    // interface de execução da validação, através de lambda
-    public interface Validation {
-        void validate();
+    // método default (implementado na interface) que retorna o primeiro erro, se existir
+    default Error firstError() {
+        if (hasErrors()) return getErrors().get(0);
+        return null;
     }
 }

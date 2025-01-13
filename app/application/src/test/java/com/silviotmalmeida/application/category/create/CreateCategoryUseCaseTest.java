@@ -3,6 +3,7 @@ package com.silviotmalmeida.application.category.create;
 
 import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
 import com.silviotmalmeida.domain.exception.DomainException;
+import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
 import com.silviotmalmeida.utils.Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -42,9 +43,11 @@ public class CreateCategoryUseCaseTest {
         Mockito.when(repository.create(Mockito.any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         // executando o usecase
-        final CreateCategoryOutput output = usecase.execute(input);
+        final var output = usecase.execute(input).getOrNull();
+        final var notification = output == null ? usecase.execute(input).getLeft() : null;
 
         // executando os testes
+        Assertions.assertInstanceOf(CreateCategoryOutput.class, output);
         Assertions.assertNotNull(output);
         Assertions.assertNotNull(output.category().getId());
         Assertions.assertEquals(expectedName, output.category().getName());
@@ -54,6 +57,8 @@ public class CreateCategoryUseCaseTest {
         Assertions.assertNotNull(output.category().getUpdatedAt());
         if (expectedIsActive) Assertions.assertNull(output.category().getDeletedAt());
         if (!expectedIsActive) Assertions.assertNotNull(output.category().getDeletedAt());
+
+        Assertions.assertNull(notification);
 
         Mockito.verify(repository, Mockito.times(1)).create(Mockito.any());
     }
@@ -72,10 +77,16 @@ public class CreateCategoryUseCaseTest {
         // criando o input
         final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
+        // executando o usecase
+        final var output = usecase.execute(input).getOrNull();
+        final var notification = output == null ? usecase.execute(input).getLeft() : null;
+
         // executando os testes
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> usecase.execute(input));
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertNull(output);
+
+        Assertions.assertInstanceOf(NotificationValidationHandler.class, notification);
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
 
         Mockito.verify(repository, Mockito.times(0)).create(Mockito.any());
     }

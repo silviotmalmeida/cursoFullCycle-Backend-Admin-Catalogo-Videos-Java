@@ -1,31 +1,32 @@
 // definição do pacote
-package com.silviotmalmeida.application.category.create;
+package com.silviotmalmeida.application.category.update;
 
 import com.silviotmalmeida.domain.category.Category;
+import com.silviotmalmeida.domain.category.CategoryID;
 import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
-import com.silviotmalmeida.domain.validation.handler.ThrowsValidationHandler;
 import io.vavr.control.Either;
 
 import java.util.Objects;
 
 // implementação do usecase
-public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
+public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
 
     // atributos
     private final CategoryRepositoryInterface repository;
 
     // construtor
-    public DefaultCreateCategoryUseCase(final CategoryRepositoryInterface repository) {
+    public DefaultUpdateCategoryUseCase(final CategoryRepositoryInterface repository) {
         this.repository = Objects.requireNonNull(repository);
     }
 
     // método de execução
     // recebe um input e retorna um notification ou um output
     @Override
-    public Either<NotificationValidationHandler, CreateCategoryOutput> execute(final CreateCategoryInput input) {
+    public Either<NotificationValidationHandler, UpdateCategoryOutput> execute(final UpdateCategoryInput input) {
 
         // atributos do input
+        final CategoryID id = input.id();
         final String name = input.name();
         final String description = input.description();
         final boolean isActive = input.isActive();
@@ -47,7 +48,7 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
             // persistindo
             final Category categoryBD = this.repository.create(category);
             // retornando o output
-            return Either.right(CreateCategoryOutput.from(categoryBD));
+            return Either.right(UpdateCategoryOutput.from(categoryBD));
         }
     }
 }
