@@ -4,7 +4,6 @@ package com.silviotmalmeida.application.category.create;
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
-import com.silviotmalmeida.domain.validation.handler.ThrowsValidationHandler;
 import io.vavr.control.Either;
 
 import java.util.Objects;

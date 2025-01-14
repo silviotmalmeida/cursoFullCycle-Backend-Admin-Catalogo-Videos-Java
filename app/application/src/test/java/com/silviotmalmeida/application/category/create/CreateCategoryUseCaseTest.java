@@ -2,7 +2,6 @@
 package com.silviotmalmeida.application.category.create;
 
 import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
-import com.silviotmalmeida.domain.exception.DomainException;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
 import com.silviotmalmeida.utils.Utils;
 import org.junit.jupiter.api.Assertions;
@@ -43,8 +42,9 @@ public class CreateCategoryUseCaseTest {
         Mockito.when(repository.create(Mockito.any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         // executando o usecase
-        final var output = usecase.execute(input).getOrNull();
-        final var notification = output == null ? usecase.execute(input).getLeft() : null;
+        final var result = usecase.execute(input);
+        final var output = result.getOrNull();
+        final var notification = output == null ? result.getLeft() : null;
 
         // executando os testes
         Assertions.assertInstanceOf(CreateCategoryOutput.class, output);
@@ -65,7 +65,7 @@ public class CreateCategoryUseCaseTest {
 
     // teste de name inválido
     @Test
-    public void givenNullNameInput_whenCallsCreateCategory_thenReturnAnDomainException() {
+    public void givenNullNameInput_whenCallsCreateCategory_thenReturnAnNotification() {
 
         // atributos esperados
         final String expectedName = null;
@@ -78,8 +78,9 @@ public class CreateCategoryUseCaseTest {
         final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
         // executando o usecase
-        final var output = usecase.execute(input).getOrNull();
-        final var notification = output == null ? usecase.execute(input).getLeft() : null;
+        final var result = usecase.execute(input);
+        final var output = result.getOrNull();
+        final var notification = output == null ? result.getLeft() : null;
 
         // executando os testes
         Assertions.assertNull(output);
@@ -104,7 +105,7 @@ public class CreateCategoryUseCaseTest {
         // criando o input
         final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
-        // definindo o comportamento do create (recebe qualquer coisa e retorna o primeiro argumento passado ao método)
+        // definindo o comportamento do create (lançando exceção interna)
         Mockito.when(repository.create(Mockito.any())).thenThrow(new IllegalStateException(expectedErrorMessage));
 
         // executando os testes

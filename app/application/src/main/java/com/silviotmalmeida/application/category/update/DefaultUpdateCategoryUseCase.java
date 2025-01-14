@@ -29,13 +29,16 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
         final CategoryID id = input.id();
         final String name = input.name();
         final String description = input.description();
-        final boolean isActive = input.isActive();
+        final Boolean isActive = input.isActive();
 
         // classe de notificação de erros
         final NotificationValidationHandler notification = NotificationValidationHandler.create();
 
-        // criando a entidade
-        final Category category = Category.newCategory(name, description, isActive);
+        // obtendo a entidade do bd
+        Category category = this.repository.findById(id).get();
+        System.out.println("oi");
+        // atualizando a entidade
+        category.update(name, description, isActive);
         // validando
         category.validate(notification);
 
@@ -46,7 +49,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
         // senão, prossegue
         else {
             // persistindo
-            final Category categoryBD = this.repository.create(category);
+            final Category categoryBD = this.repository.update(category);
             // retornando o output
             return Either.right(UpdateCategoryOutput.from(categoryBD));
         }

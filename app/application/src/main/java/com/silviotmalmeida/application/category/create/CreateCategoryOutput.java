@@ -2,7 +2,6 @@
 package com.silviotmalmeida.application.category.create;
 
 import com.silviotmalmeida.domain.category.Category;
-import com.silviotmalmeida.domain.category.CategoryID;
 
 // Output DTO para create
 public record CreateCategoryOutput(

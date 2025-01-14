@@ -8,14 +8,14 @@ public record UpdateCategoryInput(
         CategoryID id,
         String name,
         String description,
-        boolean isActive
+        Boolean isActive
 ) {
     // factory method
     public static UpdateCategoryInput with(
             final CategoryID id,
             final String name,
             final String description,
-            final boolean isActive
+            final Boolean isActive
     ) {
         return new UpdateCategoryInput(id, name, description, isActive);
     }

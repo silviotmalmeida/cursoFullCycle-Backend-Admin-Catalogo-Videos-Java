@@ -1,7 +1,6 @@
 // definição do package
 package com.silviotmalmeida.domain.validation.handler;
 
-import com.silviotmalmeida.domain.exception.DomainException;
 import com.silviotmalmeida.domain.validation.Error;
 import com.silviotmalmeida.domain.validation.ValidationHandler;
 
@@ -27,11 +26,6 @@ public class NotificationValidationHandler implements ValidationHandler {
     // factory method com lista inicial com um error
     public static NotificationValidationHandler create(final Error error) {
         return new NotificationValidationHandler(new ArrayList<>()).append(error);
-    }
-
-    // factory method com lista inicial com um throwable
-    public static NotificationValidationHandler create(final Throwable throwable) {
-        return create(new Error(throwable.getMessage()));
     }
 
     // insere um erro adicional no handler

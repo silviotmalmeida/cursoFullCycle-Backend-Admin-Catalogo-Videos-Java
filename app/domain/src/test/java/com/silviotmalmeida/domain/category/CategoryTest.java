@@ -243,5 +243,6 @@ public class CategoryTest {
         Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(initialUpdatedAt));
         if (updateIsActive) Assertions.assertNull(actualCategory.getDeletedAt());
         if (!updateIsActive) Assertions.assertNotNull(actualCategory.getDeletedAt());
+        if (!updateIsActive) Assertions.assertTrue(actualCategory.getDeletedAt().isAfter(initialCreateddAt));
     }
 }

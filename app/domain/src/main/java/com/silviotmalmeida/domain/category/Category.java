@@ -52,21 +52,6 @@ public class Category extends AggregateRoot<CategoryID> {
         return new Category(id, name, description, isActive, now, now, deletedAt);
     }
 
-    // factory method para permitir a contrução dos objetos já com id definido
-    public static Category newCategory(
-            final CategoryID id,
-            final String name,
-            final String description,
-            final boolean isActive
-    ) {
-        // obtendo o instant da criação
-        final Instant now = Instant.now();
-        // definindo o deletedAt
-        final Instant deletedAt = isActive ? null : now;
-        // criando o objeto
-        return new Category(id, name, description, isActive, now, now, deletedAt);
-    }
-
     // método de autovalidação
     @Override
     public void validate(final ValidationHandler handler) {
@@ -96,14 +81,16 @@ public class Category extends AggregateRoot<CategoryID> {
     }
 
     // método de atualização geral
-    public Category update(final String name, final String description, final boolean isActive) {
-        this.name = name;
-        this.description = description;
+    public Category update(final String name, final String description, final Boolean isActive) {
+        if (name != null) this.name = name;
+        if (description != null) this.description = description;
         this.updatedAt = Instant.now();
-        if (isActive) {
-            activate();
-        } else {
-            deactivate();
+        if (isActive != null) {
+            if (isActive) {
+                activate();
+            } else {
+                deactivate();
+            }
         }
         return this;
     }
