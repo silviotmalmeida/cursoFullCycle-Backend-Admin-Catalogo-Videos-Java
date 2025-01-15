@@ -5,6 +5,7 @@ import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
 import com.silviotmalmeida.utils.Utils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
@@ -25,6 +26,13 @@ public class CreateCategoryUseCaseTest {
     // definindo o mock do repository
     @Mock
     private CategoryRepositoryInterface repository;
+
+    // definindo as ações a serem realizadas antes de cada teste
+    // função para resetar os mocks
+    @BeforeEach
+    void cleanUp() {
+        Mockito.reset(repository);
+    }
 
     // teste de caminho feliz
     @Test

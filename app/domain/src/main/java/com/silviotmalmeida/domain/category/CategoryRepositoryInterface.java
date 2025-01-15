@@ -12,14 +12,14 @@ public interface CategoryRepositoryInterface {
     Category create(Category category);
 
     // listagem
-    Pagination<Category> findAll(CategorySearchQuery query);
+    Pagination<Category> paginate(CategorySearchQuery query);
 
     // busca por id
-    Optional<Category> findById(CategoryID id);
+    Optional<Category> find(CategoryID id);
 
     // atualização
     Category update(Category category);
 
     // deleção por id
-    boolean deleteById(CategoryID id);
+    boolean delete(CategoryID id);
 }

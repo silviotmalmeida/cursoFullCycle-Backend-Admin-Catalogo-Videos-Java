@@ -4,6 +4,8 @@ package com.silviotmalmeida.application.category.update;
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryID;
 import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.exception.DomainException;
+import com.silviotmalmeida.domain.validation.Error;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
 import io.vavr.control.Either;
 
@@ -34,9 +36,10 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
         // classe de notificação de erros
         final NotificationValidationHandler notification = NotificationValidationHandler.create();
 
-        // obtendo a entidade do bd
-        Category category = this.repository.findById(id).get();
-        System.out.println("oi");
+        // obtendo a category do bd
+        Category category = this.repository.find(id)
+                .orElseThrow(() -> DomainException.with(new Error("Category id %s not found".formatted(id.getValue()))));
+
         // atualizando a entidade
         category.update(name, description, isActive);
         // validando

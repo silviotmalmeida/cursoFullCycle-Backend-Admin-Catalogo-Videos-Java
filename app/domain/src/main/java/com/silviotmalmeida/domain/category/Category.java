@@ -7,7 +7,7 @@ import com.silviotmalmeida.domain.validation.ValidationHandler;
 import java.time.Instant;
 
 // definindo a entidade
-public class Category extends AggregateRoot<CategoryID> {
+public class Category extends AggregateRoot<CategoryID> implements Cloneable {
 
     // atributos
     private String name;
@@ -82,15 +82,22 @@ public class Category extends AggregateRoot<CategoryID> {
 
     // método de atualização geral
     public Category update(final String name, final String description, final Boolean isActive) {
-        if (name != null) this.name = name;
-        if (description != null) this.description = description;
-        this.updatedAt = Instant.now();
+
+        if (name != null) {
+            this.name = name;
+            this.updatedAt = Instant.now();
+        }
+        if (description != null) {
+            this.description = description;
+            this.updatedAt = Instant.now();
+        }
         if (isActive != null) {
             if (isActive) {
                 activate();
             } else {
                 deactivate();
             }
+            this.updatedAt = Instant.now();
         }
         return this;
     }
@@ -122,5 +129,14 @@ public class Category extends AggregateRoot<CategoryID> {
 
     public Instant getDeletedAt() {
         return deletedAt;
+    }
+
+    @Override
+    public Category clone() {
+        try {
+            return (Category) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

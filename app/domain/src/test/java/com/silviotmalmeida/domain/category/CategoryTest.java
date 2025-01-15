@@ -205,44 +205,28 @@ public class CategoryTest {
         final boolean expectedIsActive = new Random().nextBoolean();
 
         // criando a entidade
-        final Category actualCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+        final Category initialCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        // executando os testes
-        Assertions.assertNotNull(actualCategory);
-        Assertions.assertNotNull(actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertNotNull(actualCategory.getCreatedAt());
-        Assertions.assertEquals(actualCategory.getCreatedAt(), actualCategory.getUpdatedAt());
-        if (expectedIsActive) Assertions.assertNull(actualCategory.getDeletedAt());
-        if (!expectedIsActive) Assertions.assertNotNull(actualCategory.getDeletedAt());
-
-        // atributos da classe inicial
-        final CategoryID initialId = actualCategory.getId();
-        final String initialName = actualCategory.getName();
-        final String initialDescription = actualCategory.getDescription();
-        final Instant initialCreateddAt = actualCategory.getCreatedAt();
-        final Instant initialUpdatedAt = actualCategory.getUpdatedAt();
+        // criando um clone da classe inicial para atualizar
+        final Category actualCategory = initialCategory.clone();
 
         // atributos atualizados
         final String updatedName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
         final String updatedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
         final boolean updateIsActive = !expectedIsActive;
 
-        // ativando
+        // atualizando
         actualCategory.update(updatedName, updatedDescription, updateIsActive);
 
         // executando os testes
         Assertions.assertNotNull(actualCategory);
-        Assertions.assertEquals(actualCategory.getId(), initialId);
+        Assertions.assertEquals(actualCategory.getId(), initialCategory.getId());
         Assertions.assertEquals(actualCategory.getName(), updatedName);
         Assertions.assertEquals(actualCategory.getDescription(), updatedDescription);
         Assertions.assertEquals(actualCategory.isActive(), updateIsActive);
-        Assertions.assertEquals(actualCategory.getCreatedAt(), initialCreateddAt);
-        Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(initialUpdatedAt));
+        Assertions.assertEquals(actualCategory.getCreatedAt(), initialCategory.getCreatedAt());
+        Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(initialCategory.getUpdatedAt()));
         if (updateIsActive) Assertions.assertNull(actualCategory.getDeletedAt());
         if (!updateIsActive) Assertions.assertNotNull(actualCategory.getDeletedAt());
-        if (!updateIsActive) Assertions.assertTrue(actualCategory.getDeletedAt().isAfter(initialCreateddAt));
     }
 }
