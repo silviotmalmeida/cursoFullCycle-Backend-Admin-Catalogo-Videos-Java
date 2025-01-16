@@ -67,21 +67,21 @@ public class UpdateCategoryUseCaseTest {
         // executando os testes
         Assertions.assertInstanceOf(UpdateCategoryOutput.class, output);
         Assertions.assertNotNull(output);
-        Assertions.assertNotNull(output.category().getId());
-        Assertions.assertEquals(output.category().getId(), initialCategory.getId());
-        Assertions.assertEquals(expectedName, output.category().getName());
-        Assertions.assertEquals(expectedDescription, output.category().getDescription());
-        Assertions.assertEquals(expectedIsActive, output.category().isActive());
+        Assertions.assertNotNull(output.id());
+        Assertions.assertEquals(output.id(), initialCategory.getId().getValue());
+        Assertions.assertEquals(expectedName, output.name());
+        Assertions.assertEquals(expectedDescription, output.description());
+        Assertions.assertEquals(expectedIsActive, output.isActive());
         Assertions.assertNotEquals(initialName, expectedName);
         Assertions.assertNotEquals(initialDescription, expectedDescription);
         Assertions.assertNotEquals(initialIsActive, expectedIsActive);
-        Assertions.assertNotNull(output.category().getCreatedAt());
-        Assertions.assertNotNull(output.category().getUpdatedAt());
-        Assertions.assertEquals(output.category().getCreatedAt(), initialCategory.getCreatedAt());
-        Assertions.assertTrue(output.category().getUpdatedAt().isAfter(initialCategory.getCreatedAt()));
-        Assertions.assertTrue(output.category().getUpdatedAt().isAfter(initialCategory.getUpdatedAt()));
-        if (expectedIsActive) Assertions.assertNull(output.category().getDeletedAt());
-        if (!expectedIsActive) Assertions.assertNotNull(output.category().getDeletedAt());
+        Assertions.assertNotNull(output.createdAt());
+        Assertions.assertNotNull(output.updatedAt());
+        Assertions.assertEquals(output.createdAt(), initialCategory.getCreatedAt());
+        Assertions.assertTrue(output.updatedAt().isAfter(initialCategory.getCreatedAt()));
+        Assertions.assertTrue(output.updatedAt().isAfter(initialCategory.getUpdatedAt()));
+        if (expectedIsActive) Assertions.assertNull(output.deletedAt());
+        if (!expectedIsActive) Assertions.assertNotNull(output.deletedAt());
 
         Assertions.assertNull(notification);
 
@@ -118,14 +118,14 @@ public class UpdateCategoryUseCaseTest {
         // executando os testes
         Assertions.assertInstanceOf(UpdateCategoryOutput.class, output);
         Assertions.assertNotNull(output);
-        Assertions.assertNotNull(output.category().getId());
-        Assertions.assertEquals(output.category().getId(), initialCategory.getId());
-        Assertions.assertEquals(output.category().getName(), initialCategory.getName());
-        Assertions.assertEquals(output.category().getDescription(), initialCategory.getDescription());
-        Assertions.assertEquals(output.category().isActive(), initialCategory.isActive());
-        Assertions.assertEquals(output.category().getCreatedAt(), initialCategory.getCreatedAt());
-        Assertions.assertEquals(output.category().getUpdatedAt(), initialCategory.getUpdatedAt());
-        Assertions.assertEquals(output.category().getDeletedAt(), initialCategory.getDeletedAt());
+        Assertions.assertNotNull(output.id());
+        Assertions.assertEquals(output.id(), initialCategory.getId().getValue());
+        Assertions.assertEquals(output.name(), initialCategory.getName());
+        Assertions.assertEquals(output.description(), initialCategory.getDescription());
+        Assertions.assertEquals(output.isActive(), initialCategory.isActive());
+        Assertions.assertEquals(output.createdAt(), initialCategory.getCreatedAt());
+        Assertions.assertEquals(output.updatedAt(), initialCategory.getUpdatedAt());
+        Assertions.assertEquals(output.deletedAt(), initialCategory.getDeletedAt());
 
         Assertions.assertNull(notification);
 

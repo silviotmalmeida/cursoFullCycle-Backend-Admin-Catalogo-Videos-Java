@@ -1,13 +1,13 @@
 // definição do pacote
-package com.silviotmalmeida.application.category.create;
+package com.silviotmalmeida.application.category.find;
 
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryID;
 
 import java.time.Instant;
 
-// Output DTO para create
-public record CreateCategoryOutput(
+// Output DTO para find
+public record FindCategoryOutput(
         String id,
         String name,
         String description,
@@ -17,7 +17,7 @@ public record CreateCategoryOutput(
         Instant deletedAt
 ) {
     // factory method
-    public static CreateCategoryOutput from(
+    public static FindCategoryOutput from(
             final String id,
             final String name,
             final String description,
@@ -26,6 +26,6 @@ public record CreateCategoryOutput(
             final Instant updatedAt,
             final Instant deletedAt
     ) {
-        return new CreateCategoryOutput(id, name, description, isActive, createdAt, updatedAt, deletedAt);
+        return new FindCategoryOutput(id, name, description, isActive, createdAt, updatedAt, deletedAt);
     }
 }

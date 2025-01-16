@@ -3,7 +3,7 @@ package com.silviotmalmeida.application.category.delete;
 
 import com.silviotmalmeida.domain.category.CategoryID;
 
-// Input DTO para update
+// Input DTO para delete
 public record DeleteCategoryInput(
         CategoryID id
 ) {

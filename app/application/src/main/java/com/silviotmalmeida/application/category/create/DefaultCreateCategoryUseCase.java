@@ -46,7 +46,15 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
             // persistindo
             final Category categoryBD = this.repository.create(category);
             // retornando o output
-            return Either.right(CreateCategoryOutput.from(categoryBD));
+            return Either.right(CreateCategoryOutput.from(
+                    categoryBD.getId().getValue(),
+                    categoryBD.getName(),
+                    categoryBD.getDescription(),
+                    categoryBD.isActive(),
+                    categoryBD.getCreatedAt(),
+                    categoryBD.getUpdatedAt(),
+                    categoryBD.getDeletedAt()
+            ));
         }
     }
 }

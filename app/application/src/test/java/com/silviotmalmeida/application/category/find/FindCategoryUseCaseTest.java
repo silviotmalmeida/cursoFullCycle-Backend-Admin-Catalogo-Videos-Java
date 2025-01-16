@@ -1,5 +1,5 @@
 // definição do pacote
-package com.silviotmalmeida.application.category.delete;
+package com.silviotmalmeida.application.category.find;
 
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryID;
@@ -19,11 +19,11 @@ import java.util.Optional;
 import java.util.Random;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteCategoryUseCaseTest {
+public class FindCategoryUseCaseTest {
 
     // definindo o usecase que vai receber o mock do repository
     @InjectMocks
-    private DefaultDeleteCategoryUseCase usecase;
+    private DefaultFindCategoryUseCase usecase;
 
     // definindo o mock do repository
     @Mock
@@ -38,7 +38,7 @@ public class DeleteCategoryUseCaseTest {
 
     // teste de caminho feliz
     @Test
-    public void givenValidInput_whenCallsDeleteCategory_shouldReturnValidOutput() {
+    public void givenValidInput_whenCallsFindCategory_shouldReturnValidOutput() {
 
         // atributos esperados
         final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
@@ -47,27 +47,32 @@ public class DeleteCategoryUseCaseTest {
         final Category initialCategory = Category.newCategory(initialName, initialDescription, initialIsActive);
 
         // criando o input
-        final DeleteCategoryInput input = DeleteCategoryInput.with(initialCategory.getId());
+        final FindCategoryInput input = FindCategoryInput.with(initialCategory.getId());
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
-        // definindo o comportamento do delete (recebe o id e retorna true)
-        Mockito.when(repository.delete(Mockito.eq(initialCategory.getId()))).thenReturn(true);
 
         // executando o usecase
-        final DeleteCategoryOutput output = usecase.execute(input);
+        final FindCategoryOutput output = usecase.execute(input);
 
         // executando os testes
-        Assertions.assertInstanceOf(DeleteCategoryOutput.class, output);
-        Assertions.assertTrue(output.success());
+        Assertions.assertInstanceOf(FindCategoryOutput.class, output);
+        Assertions.assertNotNull(output);
+        Assertions.assertNotNull(output.id());
+        Assertions.assertEquals(initialCategory.getId().getValue(), output.id());
+        Assertions.assertEquals(initialName, output.name());
+        Assertions.assertEquals(initialDescription, output.description());
+        Assertions.assertEquals(initialIsActive, output.isActive());
+        Assertions.assertEquals(initialCategory.getCreatedAt(), output.createdAt());
+        Assertions.assertEquals(initialCategory.getUpdatedAt(), output.updatedAt());
+        Assertions.assertEquals(initialCategory.getDeletedAt(), output.deletedAt());
 
         Mockito.verify(repository, Mockito.times(1)).find(Mockito.any());
-        Mockito.verify(repository, Mockito.times(1)).delete(Mockito.any());
     }
 
     // teste de id inexistente
     @Test
-    public void givenNonExistentID_whenCallsDeleteCategory_shouldReturnException() {
+    public void givenNonExistentID_whenCallsFindCategory_shouldReturnException() {
 
         // atributos esperados
         final CategoryID id = CategoryID.from("123");
@@ -75,7 +80,7 @@ public class DeleteCategoryUseCaseTest {
         final String expectedErrorMessage = "Category id %s not found".formatted(id.getValue());
 
         // criando o input
-        final DeleteCategoryInput input = DeleteCategoryInput.with(id);
+        final FindCategoryInput input = FindCategoryInput.with(id);
 
         // definindo o comportamento do find (recebe o id e retorna vazio)
         Mockito.when(repository.find(Mockito.eq(id))).thenReturn(Optional.empty());
@@ -86,7 +91,6 @@ public class DeleteCategoryUseCaseTest {
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
 
         Mockito.verify(repository, Mockito.times(1)).find(Mockito.any());
-        Mockito.verify(repository, Mockito.times(0)).delete(Mockito.any());
     }
 
     // teste de erro interno do repository
@@ -101,18 +105,15 @@ public class DeleteCategoryUseCaseTest {
         final String expectedErrorMessage = "Repository error";
 
         // criando o input
-        final DeleteCategoryInput input = DeleteCategoryInput.with(initialCategory.getId());
+        final FindCategoryInput input = FindCategoryInput.with(initialCategory.getId());
 
-        // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
-        Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
-        // definindo o comportamento do delete (lançando exceção interna)
-        Mockito.when(repository.delete(Mockito.any())).thenThrow(new IllegalStateException(expectedErrorMessage));
+        // definindo o comportamento do find (recebe o id e lança exceção interna)
+        Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenThrow(new IllegalStateException(expectedErrorMessage));
 
         // executando os testes
         final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> usecase.execute(input));
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
 
         Mockito.verify(repository, Mockito.times(1)).find(Mockito.any());
-        Mockito.verify(repository, Mockito.times(1)).delete(Mockito.any());
     }
 }

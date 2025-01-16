@@ -54,7 +54,15 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
             // persistindo
             final Category categoryBD = this.repository.update(category);
             // retornando o output
-            return Either.right(UpdateCategoryOutput.from(categoryBD));
+            return Either.right(UpdateCategoryOutput.from(
+                    categoryBD.getId().getValue(),
+                    categoryBD.getName(),
+                    categoryBD.getDescription(),
+                    categoryBD.isActive(),
+                    categoryBD.getCreatedAt(),
+                    categoryBD.getUpdatedAt(),
+                    categoryBD.getDeletedAt()
+            ));
         }
     }
 }

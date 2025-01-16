@@ -3,7 +3,7 @@ package com.silviotmalmeida.application.category.delete;
 
 import com.silviotmalmeida.domain.category.Category;
 
-// Output DTO para update
+// Output DTO para delete
 public record DeleteCategoryOutput(
         boolean success
 ) {

@@ -57,14 +57,14 @@ public class CreateCategoryUseCaseTest {
         // executando os testes
         Assertions.assertInstanceOf(CreateCategoryOutput.class, output);
         Assertions.assertNotNull(output);
-        Assertions.assertNotNull(output.category().getId());
-        Assertions.assertEquals(expectedName, output.category().getName());
-        Assertions.assertEquals(expectedDescription, output.category().getDescription());
-        Assertions.assertEquals(expectedIsActive, output.category().isActive());
-        Assertions.assertNotNull(output.category().getCreatedAt());
-        Assertions.assertNotNull(output.category().getUpdatedAt());
-        if (expectedIsActive) Assertions.assertNull(output.category().getDeletedAt());
-        if (!expectedIsActive) Assertions.assertNotNull(output.category().getDeletedAt());
+        Assertions.assertNotNull(output.id());
+        Assertions.assertEquals(expectedName, output.name());
+        Assertions.assertEquals(expectedDescription, output.description());
+        Assertions.assertEquals(expectedIsActive, output.isActive());
+        Assertions.assertNotNull(output.createdAt());
+        Assertions.assertNotNull(output.updatedAt());
+        if (expectedIsActive) Assertions.assertNull(output.deletedAt());
+        if (!expectedIsActive) Assertions.assertNotNull(output.deletedAt());
 
         Assertions.assertNull(notification);
 
