@@ -5,14 +5,14 @@ import com.silviotmalmeida.domain.category.CategoryID;
 
 // Input DTO para update
 public record UpdateCategoryInput(
-        CategoryID id,
+        String id,
         String name,
         String description,
         Boolean isActive
 ) {
     // factory method
     public static UpdateCategoryInput with(
-            final CategoryID id,
+            final String id,
             final String name,
             final String description,
             final Boolean isActive

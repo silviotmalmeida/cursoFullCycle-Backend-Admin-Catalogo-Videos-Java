@@ -23,13 +23,13 @@ public class DefaultFindCategoryUseCase extends FindCategoryUseCase {
     // método de execução
     // recebe um input e retorna um output
     @Override
-    public FindCategoryOutput execute(final FindCategoryInput input) {
+    public FindCategoryOutput execute(final String input) {
 
         // inicializando o indicador de sucesso
         boolean success = false;
 
         // atributos do input
-        final CategoryID id = input.id();
+        final CategoryID id = CategoryID.from(input);
 
         // obtendo a entidade do bd
         Category category = this.repository.find(id)

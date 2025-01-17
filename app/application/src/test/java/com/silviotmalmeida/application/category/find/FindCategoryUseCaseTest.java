@@ -47,7 +47,7 @@ public class FindCategoryUseCaseTest {
         final Category initialCategory = Category.newCategory(initialName, initialDescription, initialIsActive);
 
         // criando o input
-        final FindCategoryInput input = FindCategoryInput.with(initialCategory.getId());
+        final String input = initialCategory.getId().getValue();
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
@@ -80,7 +80,7 @@ public class FindCategoryUseCaseTest {
         final String expectedErrorMessage = "Category id %s not found".formatted(id.getValue());
 
         // criando o input
-        final FindCategoryInput input = FindCategoryInput.with(id);
+        final String input = id.getValue();
 
         // definindo o comportamento do find (recebe o id e retorna vazio)
         Mockito.when(repository.find(Mockito.eq(id))).thenReturn(Optional.empty());
@@ -105,7 +105,7 @@ public class FindCategoryUseCaseTest {
         final String expectedErrorMessage = "Repository error";
 
         // criando o input
-        final FindCategoryInput input = FindCategoryInput.with(initialCategory.getId());
+        final String input = initialCategory.getId().getValue();
 
         // definindo o comportamento do find (recebe o id e lança exceção interna)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenThrow(new IllegalStateException(expectedErrorMessage));

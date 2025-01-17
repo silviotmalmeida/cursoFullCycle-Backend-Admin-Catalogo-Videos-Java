@@ -47,7 +47,7 @@ public class DeleteCategoryUseCaseTest {
         final Category initialCategory = Category.newCategory(initialName, initialDescription, initialIsActive);
 
         // criando o input
-        final DeleteCategoryInput input = DeleteCategoryInput.with(initialCategory.getId());
+        final String input = initialCategory.getId().getValue();
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
@@ -55,11 +55,10 @@ public class DeleteCategoryUseCaseTest {
         Mockito.when(repository.delete(Mockito.eq(initialCategory.getId()))).thenReturn(true);
 
         // executando o usecase
-        final DeleteCategoryOutput output = usecase.execute(input);
+        final Boolean output = usecase.execute(input);
 
         // executando os testes
-        Assertions.assertInstanceOf(DeleteCategoryOutput.class, output);
-        Assertions.assertTrue(output.success());
+        Assertions.assertTrue(output);
 
         Mockito.verify(repository, Mockito.times(1)).find(Mockito.any());
         Mockito.verify(repository, Mockito.times(1)).delete(Mockito.any());
@@ -75,7 +74,7 @@ public class DeleteCategoryUseCaseTest {
         final String expectedErrorMessage = "Category id %s not found".formatted(id.getValue());
 
         // criando o input
-        final DeleteCategoryInput input = DeleteCategoryInput.with(id);
+        final String input = id.getValue();
 
         // definindo o comportamento do find (recebe o id e retorna vazio)
         Mockito.when(repository.find(Mockito.eq(id))).thenReturn(Optional.empty());
@@ -101,7 +100,7 @@ public class DeleteCategoryUseCaseTest {
         final String expectedErrorMessage = "Repository error";
 
         // criando o input
-        final DeleteCategoryInput input = DeleteCategoryInput.with(initialCategory.getId());
+        final String input = initialCategory.getId().getValue();
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));

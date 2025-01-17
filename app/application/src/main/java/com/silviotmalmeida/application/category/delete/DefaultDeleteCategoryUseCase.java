@@ -23,13 +23,13 @@ public class DefaultDeleteCategoryUseCase extends DeleteCategoryUseCase {
     // método de execução
     // recebe um input e retorna um output
     @Override
-    public DeleteCategoryOutput execute(final DeleteCategoryInput input) {
+    public Boolean execute(final String input) {
 
         // inicializando o indicador de sucesso
         boolean success = false;
 
         // atributos do input
-        final CategoryID id = input.id();
+        final CategoryID id = CategoryID.from(input);
 
         // obtendo a entidade do bd
         Category category = this.repository.find(id)
@@ -37,6 +37,6 @@ public class DefaultDeleteCategoryUseCase extends DeleteCategoryUseCase {
         // deletando
         success = this.repository.delete(category.getId());
         // retornando o output
-        return DeleteCategoryOutput.from(success);
+        return success;
     }
 }

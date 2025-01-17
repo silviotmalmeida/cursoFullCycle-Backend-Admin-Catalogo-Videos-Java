@@ -28,7 +28,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
     public Either<NotificationValidationHandler, UpdateCategoryOutput> execute(final UpdateCategoryInput input) {
 
         // atributos do input
-        final CategoryID id = input.id();
+        final CategoryID id = CategoryID.from(input.id());
         final String name = input.name();
         final String description = input.description();
         final Boolean isActive = input.isActive();

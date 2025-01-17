@@ -52,7 +52,7 @@ public class UpdateCategoryUseCaseTest {
         final boolean expectedIsActive = !initialIsActive;
 
         // criando o input
-        final UpdateCategoryInput input = UpdateCategoryInput.with(initialCategory.getId(), expectedName, expectedDescription, expectedIsActive);
+        final UpdateCategoryInput input = UpdateCategoryInput.with(initialCategory.getId().getValue(), expectedName, expectedDescription, expectedIsActive);
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
@@ -103,7 +103,7 @@ public class UpdateCategoryUseCaseTest {
         final Boolean expectedIsActive = null;
 
         // criando o input
-        final UpdateCategoryInput input = UpdateCategoryInput.with(initialCategory.getId(), expectedName, expectedDescription, expectedIsActive);
+        final UpdateCategoryInput input = UpdateCategoryInput.with(initialCategory.getId().getValue(), expectedName, expectedDescription, expectedIsActive);
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
@@ -149,7 +149,7 @@ public class UpdateCategoryUseCaseTest {
         final String expectedErrorMessage = "'name' should not be empty";
 
         // criando o input
-        final UpdateCategoryInput input = UpdateCategoryInput.with(initialCategory.getId(), expectedName, expectedDescription, expectedIsActive);
+        final UpdateCategoryInput input = UpdateCategoryInput.with(initialCategory.getId().getValue(), expectedName, expectedDescription, expectedIsActive);
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
@@ -184,7 +184,7 @@ public class UpdateCategoryUseCaseTest {
         final String expectedErrorMessage = "Category id %s not found".formatted(id.getValue());
 
         // criando o input
-        final UpdateCategoryInput input = UpdateCategoryInput.with(id, expectedName, expectedDescription, expectedIsActive);
+        final UpdateCategoryInput input = UpdateCategoryInput.with(id.getValue(), expectedName, expectedDescription, expectedIsActive);
 
         // definindo o comportamento do find (recebe o id e retorna vazio)
         Mockito.when(repository.find(Mockito.eq(id))).thenReturn(Optional.empty());
@@ -213,7 +213,7 @@ public class UpdateCategoryUseCaseTest {
         final String expectedErrorMessage = "Repository error";
 
         // criando o input
-        final UpdateCategoryInput input = UpdateCategoryInput.with(initialCategory.getId(), expectedName, expectedDescription, expectedIsActive);
+        final UpdateCategoryInput input = UpdateCategoryInput.with(initialCategory.getId().getValue(), expectedName, expectedDescription, expectedIsActive);
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
         Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
