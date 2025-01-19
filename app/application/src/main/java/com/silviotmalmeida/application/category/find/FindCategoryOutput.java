@@ -1,12 +1,9 @@
 // definição do pacote
 package com.silviotmalmeida.application.category.find;
 
-import com.silviotmalmeida.domain.category.Category;
-import com.silviotmalmeida.domain.category.CategoryID;
-
 import java.time.Instant;
 
-// Output DTO para find
+// Output DTO para create
 public record FindCategoryOutput(
         String id,
         String name,

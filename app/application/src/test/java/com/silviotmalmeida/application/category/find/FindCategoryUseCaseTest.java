@@ -1,6 +1,7 @@
 // definição do pacote
 package com.silviotmalmeida.application.category.find;
 
+import com.silviotmalmeida.application.category.paginate.PaginateCategoryOutput;
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryID;
 import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
