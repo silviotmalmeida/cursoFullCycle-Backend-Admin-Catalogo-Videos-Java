@@ -2,12 +2,9 @@
 package com.silviotmalmeida.application.category.paginate;
 
 import com.silviotmalmeida.domain.category.Category;
-import com.silviotmalmeida.domain.category.CategoryID;
 import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
 import com.silviotmalmeida.domain.category.CategorySearchQuery;
-import com.silviotmalmeida.domain.exception.DomainException;
 import com.silviotmalmeida.domain.pagination.Pagination;
-import com.silviotmalmeida.utils.Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 @ExtendWith(MockitoExtension.class)
 public class PaginateCategoryUseCaseTest {
@@ -63,7 +58,7 @@ public class PaginateCategoryUseCaseTest {
         final Pagination<Category> repositoryPagination = new Pagination<>(
                 expectedPage, expectedPerPage, categories.size(), categories);
 
-        // definindo o comportamento do Paginate (recebe os parâmetros e retorna o pagination)
+        // definindo o comportamento do Paginate (recebe o input e retorna o pagination)
         Mockito.when(repository.paginate(Mockito.eq(input))).thenReturn(repositoryPagination);
 
         // executando o usecase
@@ -113,7 +108,7 @@ public class PaginateCategoryUseCaseTest {
         final Pagination<Category> repositoryPagination = new Pagination<>(
                 expectedPage, expectedPerPage, categories.size(), categories);
 
-        // definindo o comportamento do Paginate (recebe os parâmetros e retorna o pagination)
+        // definindo o comportamento do Paginate (recebe o input e retorna o pagination)
         Mockito.when(repository.paginate(Mockito.eq(input))).thenReturn(repositoryPagination);
 
         // executando o usecase
@@ -127,28 +122,31 @@ public class PaginateCategoryUseCaseTest {
         Assertions.assertEquals(expectedTotal, output.total());
         Mockito.verify(repository, Mockito.times(1)).paginate(Mockito.any());
     }
-//
-//    // teste de erro interno do repository
-//    @Test
-//    public void givenValidInput_whenRepositoryThrowsException_shouldReturnException() {
-//
-//        // atributos esperados
-//        final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
-//        final String initialDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
-//        final boolean initialIsActive = new Random().nextBoolean();
-//        final Category initialCategory = Category.newCategory(initialName, initialDescription, initialIsActive);
-//        final String expectedErrorMessage = "Repository error";
-//
-//        // criando o input
-//        final String input = initialCategory.getId().getValue();
-//
-//        // definindo o comportamento do Paginate (recebe o id e lança exceção interna)
-//        Mockito.when(repository.Paginate(Mockito.eq(initialCategory.getId()))).thenThrow(new IllegalStateException(expectedErrorMessage));
-//
-//        // executando os testes
-//        final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> usecase.execute(input));
-//        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
-//
-//        Mockito.verify(repository, Mockito.times(1)).Paginate(Mockito.any());
-//    }
+
+    // teste de erro interno do repository
+    @Test
+    public void givenValidInput_whenRepositoryThrowsException_shouldReturnException() {
+
+        // atributos esperados
+        final List<Category> categories = List.<Category>of();
+        final int expectedPage = 0;
+        final int expectedPerPage = 10;
+        final String expectedTerms = "";
+        final String expectedSortField = "createdAt";
+        final String expectedDirection = "asc";
+        final String expectedErrorMessage = "Repository error";
+
+        // criando o input
+        final CategorySearchQuery input = new CategorySearchQuery(
+                expectedPage, expectedPerPage, expectedTerms, expectedSortField, expectedDirection);
+
+        // definindo o comportamento do Paginate (recebe o input e lança exceção interna)
+        Mockito.when(repository.paginate(Mockito.eq(input))).thenThrow(new IllegalStateException(expectedErrorMessage));
+
+        // executando os testes
+        final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> usecase.execute(input));
+        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
+
+        Mockito.verify(repository, Mockito.times(1)).paginate(Mockito.any());
     }
+}
