@@ -1,5 +1,11 @@
 plugins {
     id 'java'
+    // incluindo o plugin application
+    id 'application'
+    // incluindo o plugin do spring
+    id 'org.springframework.boot' version '2.6.7'
+    // incluindo o gerenciador de dependências do spring
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 group = 'com.silviotmalmeida.infrastructure'
@@ -9,14 +15,26 @@ repositories {
     mavenCentral()
 }
 
+// configurando a task bootJar para definir o nome e destino do arquivo gerado
+bootJar {
+    archiveFileName = 'application.jar'
+    destinationDirectory.set(file("${rootProject.buildDir}/libs"))
+}
+
 dependencies {
     // incluindo a dependência para o módulo domain
     implementation(project(":domain"))
     // incluindo a dependência para o módulo application
     implementation(project(":application"))
 
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    // incluindo a dependência para o spring web (mvc), excluindo o servidor tomcat
+    implementation('org.springframework.boot:spring-boot-starter-web'){
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    // incluindo a dependência para o servidor undertow
+    implementation('org.springframework.boot:spring-boot-starter-undertow')
+    // incluindo a dependência para o módulo de testes
+    implementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {
