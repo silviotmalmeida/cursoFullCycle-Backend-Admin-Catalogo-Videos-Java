@@ -1,11 +1,14 @@
 package com.silviotmalmeida.infrastructure;
 
-import com.silviotmalmeida.application.UseCase;
+import com.silviotmalmeida.infrastructure.configuration.WebServerConfig;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+// declarando como SpringBootApplication
+@SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        System.out.println();
+        // iniciando o Spring
+        SpringApplication.run(WebServerConfig.class, args);
     }
 }
