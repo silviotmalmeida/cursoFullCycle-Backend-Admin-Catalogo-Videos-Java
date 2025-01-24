@@ -1,0 +1,16 @@
+# arquivo com configurações adicionais que sobrescrevem às do arquivo principal application.yml, no profile test-integration
+
+# configurações do spring
+spring:
+  datasource: # client de bd
+    driver-class-name: org.h2.Driver
+    username: root
+    password: root
+    url: jdbc:h2:mem:adm_videos_test;MODE=MYSQL;DATABASE_TO_LOWER=TRUE
+    # É possível persistir em um arquivo alterando "mem:adm_videos_test" para "file:./.h2/dev"
+  jpa: # biblioteca de persistência
+    defer-datasource-initialization: true # atrasa a inicialização do datasource
+  h2: # bd
+    console:
+      enabled: true
+      path: /h2

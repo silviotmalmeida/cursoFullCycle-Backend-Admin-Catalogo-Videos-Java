@@ -1,0 +1,16 @@
+# arquivo com configurações adicionais que sobrescrevem às do arquivo principal application.yml, no profile production
+# em produção, deve-se configurar variáveis de ambiente
+
+# configurações do mysql
+mysql: # bd
+  username: ${DATABASE_MYSQL_USERNAME}
+  password: ${DATABASE_MYSQL_PASSWORD}
+  schema: backend-admin-video-catalog
+  url: ${DATABASE_MYSQL_URL}
+
+# configurações do spring
+spring:
+  jpa: # biblioteca de persistência
+    show-sql: false # printa as queries, importante só para debug em ambiente de desenvolvimento
+    hibernate:
+      ddl-auto: none # não autoriza o hibernate alterar o schema do bd. será utilizado o flyway. está redundante propositalmente para evitar problemas em produção
