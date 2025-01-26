@@ -1,9 +1,0 @@
-2025-01-24T21:13:47.632741Z 0 [System] [MY-015015] [Server] MySQL Server - start.
-2025-01-24T21:13:47.865428Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 9.1.0) starting as process 122
-2025-01-24T21:13:47.885843Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
-2025-01-24T21:13:48.128069Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
-2025-01-24T21:13:48.431761Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
-2025-01-24T21:13:48.431803Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
-2025-01-24T21:13:48.435790Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
-2025-01-24T21:13:48.456681Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '9.1.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 0  MySQL Community Server - GPL.
-2025-01-24T21:13:48.456675Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: /var/run/mysqld/mysqlx.sock

@@ -21,6 +21,7 @@ services:
             context: ./docker/mysql
             dockerfile: Dockerfile
         container_name: backend-admin-video-catalog-db
+        restart: always
         tty: true
         ports:
             - "33062:3306"
