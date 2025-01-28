@@ -36,6 +36,20 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         this.deletedAt = deletedAt;
     }
 
+    // factory method para permitir a contrução de objetos pré-definidos
+    public static Category with(
+            final CategoryID id,
+            final String name,
+            final String description,
+            final boolean isActive,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt
+    ) {
+        // criando o objeto
+        return new Category(id, name, description, isActive, createdAt, updatedAt, deletedAt);
+    }
+
     // factory method para permitir a contrução dos objetos novos
     public static Category newCategory(
             final String name,
@@ -49,7 +63,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         // definindo o deletedAt
         final Instant deletedAt = isActive ? null : now;
         // criando o objeto
-        return new Category(id, name, description, isActive, now, now, deletedAt);
+        return with(id, name, description, isActive, now, now, deletedAt);
     }
 
     // método de autovalidação
