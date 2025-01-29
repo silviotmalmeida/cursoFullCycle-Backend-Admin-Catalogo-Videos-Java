@@ -14,7 +14,7 @@ import java.time.Instant;
 @Entity
 // nome da tabela
 @Table(name = "categories")
-public class CategoryJpaEntity {
+public class CategoryJpaModel {
 
     // atributo identificador
     @Id
@@ -45,13 +45,13 @@ public class CategoryJpaEntity {
     private Instant deleted_at;
 
     // construtor privado
-    private CategoryJpaEntity(final String id,
-                              final String name,
-                              final String description,
-                              final boolean isActive,
-                              final Instant createdAt,
-                              final Instant updated_at,
-                              final Instant deleted_at
+    private CategoryJpaModel(final String id,
+                             final String name,
+                             final String description,
+                             final boolean isActive,
+                             final Instant createdAt,
+                             final Instant updated_at,
+                             final Instant deleted_at
     ) {
         this.id = id;
         this.name = name;
@@ -62,9 +62,9 @@ public class CategoryJpaEntity {
         this.deleted_at = deleted_at;
     }
 
-    // factory method para criação do JPA a partir da entidade de domínio
-    public static CategoryJpaEntity from(final Category category) {
-        return new CategoryJpaEntity(
+    // factory method para criação do model a partir da entidade de domínio
+    public static CategoryJpaModel from(final Category category) {
+        return new CategoryJpaModel(
                 category.getId().getValue(),
                 category.getName(),
                 category.getDescription(),
@@ -75,7 +75,7 @@ public class CategoryJpaEntity {
         );
     }
 
-    // factory method para criação da entidade de domínio a partir do JPA
+    // factory method para criação da entidade de domínio a partir do model
     public Category toAggregate() {
         return Category.with(
                 CategoryID.from(this.getId()),

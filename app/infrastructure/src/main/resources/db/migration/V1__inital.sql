@@ -1,6 +1,6 @@
 -- criando a tabela categories
 CREATE TABLE categories (
-    id CHAR(32) NOT NULL PRIMARY KEY,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(4000),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
