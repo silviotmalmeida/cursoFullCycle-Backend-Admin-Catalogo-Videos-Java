@@ -41,8 +41,12 @@ public class CategoryJpaModel {
     private Instant updated_at;
 
     // coluna deleted_at
-    @Column(name = "deleted_at", nullable = false, columnDefinition = "DATETIME(6)")
+    @Column(name = "deleted_at", columnDefinition = "DATETIME(6)")
     private Instant deleted_at;
+
+    // construtor vazio, necessário para o jpa
+    private CategoryJpaModel() {
+    }
 
     // construtor privado
     private CategoryJpaModel(final String id,

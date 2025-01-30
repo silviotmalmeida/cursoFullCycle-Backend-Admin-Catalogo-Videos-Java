@@ -6,5 +6,5 @@ CREATE TABLE categories (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
-    deleted_at DATETIME(6) NULL
+    deleted_at DATETIME(6)
 );
