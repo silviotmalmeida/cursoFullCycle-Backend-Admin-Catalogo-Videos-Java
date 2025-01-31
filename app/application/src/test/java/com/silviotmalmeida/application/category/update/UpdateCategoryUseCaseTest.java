@@ -3,7 +3,7 @@ package com.silviotmalmeida.application.category.update;
 
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryID;
-import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
 import com.silviotmalmeida.domain.exception.DomainException;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
 import com.silviotmalmeida.utils.Utils;
@@ -29,7 +29,7 @@ public class UpdateCategoryUseCaseTest {
 
     // definindo o mock do repository
     @Mock
-    private CategoryRepositoryInterface repository;
+    private CategoryGatewayInterface repository;
 
     // definindo as ações a serem realizadas antes de cada teste
     // função para resetar os mocks

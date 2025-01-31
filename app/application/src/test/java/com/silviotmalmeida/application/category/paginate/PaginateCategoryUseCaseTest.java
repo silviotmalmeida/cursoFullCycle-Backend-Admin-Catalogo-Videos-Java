@@ -2,7 +2,7 @@
 package com.silviotmalmeida.application.category.paginate;
 
 import com.silviotmalmeida.domain.category.Category;
-import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
 import com.silviotmalmeida.domain.category.CategorySearchQuery;
 import com.silviotmalmeida.domain.pagination.Pagination;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +25,7 @@ public class PaginateCategoryUseCaseTest {
 
     // definindo o mock do repository
     @Mock
-    private CategoryRepositoryInterface repository;
+    private CategoryGatewayInterface repository;
 
     // definindo as ações a serem realizadas antes de cada teste
     // função para resetar os mocks

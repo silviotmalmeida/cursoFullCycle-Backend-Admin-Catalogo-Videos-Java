@@ -21,25 +21,25 @@ public class Main {
         // iniciando o Spring
         SpringApplication.run(WebServerConfig.class, args);
     }
-
-    @Bean
-    public ApplicationRunner runner(CategoryJpaRepositoryInterface repository){
-        return args -> {
-            List<CategoryJpaModel> all1 = repository.findAll();
-            System.out.println(all1);
-
-            Category filmes = Category.newCategory("Filmes", null, true);
-            System.out.println(filmes);
-
-            CategoryJpaModel model = CategoryJpaModel.from(filmes);
-            System.out.println(model);
-
-            repository.saveAndFlush(model);
-
-            List<CategoryJpaModel> all2 = repository.findAll();
-            System.out.println(all2);
-
-            repository.deleteAll();
-        };
-    }
+//
+//    @Bean
+//    public ApplicationRunner runner(CategoryJpaRepositoryInterface repository){
+//        return args -> {
+//            List<CategoryJpaModel> all1 = repository.findAll();
+//            System.out.println(all1);
+//
+//            Category filmes = Category.newCategory("Filmes", null, true);
+//            System.out.println(filmes);
+//
+//            CategoryJpaModel model = CategoryJpaModel.from(filmes);
+//            System.out.println(model);
+//
+//            repository.saveAndFlush(model);
+//
+//            List<CategoryJpaModel> all2 = repository.findAll();
+//            System.out.println(all2);
+//
+//            repository.deleteAll();
+//        };
+//    }
 }

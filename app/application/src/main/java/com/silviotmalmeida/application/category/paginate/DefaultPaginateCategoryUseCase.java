@@ -2,7 +2,7 @@
 package com.silviotmalmeida.application.category.paginate;
 
 import com.silviotmalmeida.domain.category.Category;
-import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
 import com.silviotmalmeida.domain.category.CategorySearchQuery;
 import com.silviotmalmeida.domain.pagination.Pagination;
 
@@ -14,10 +14,10 @@ import java.util.Objects;
 public class DefaultPaginateCategoryUseCase extends PaginateCategoryUseCase {
 
     // atributos
-    private final CategoryRepositoryInterface repository;
+    private final CategoryGatewayInterface repository;
 
     // construtor
-    public DefaultPaginateCategoryUseCase(final CategoryRepositoryInterface repository) {
+    public DefaultPaginateCategoryUseCase(final CategoryGatewayInterface repository) {
         this.repository = Objects.requireNonNull(repository);
     }
 

@@ -6,7 +6,7 @@ import com.silviotmalmeida.domain.pagination.Pagination;
 import java.util.Optional;
 
 // interface a assinatura dos métodos de acesso à entidade, para uso dos usecases
-public interface CategoryRepositoryInterface {
+public interface CategoryGatewayInterface {
 
     // criação
     Category create(Category category);

@@ -2,7 +2,7 @@
 package com.silviotmalmeida.application.category.create;
 
 import com.silviotmalmeida.domain.category.Category;
-import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
 import io.vavr.control.Either;
 
@@ -12,10 +12,10 @@ import java.util.Objects;
 public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
 
     // atributos
-    private final CategoryRepositoryInterface repository;
+    private final CategoryGatewayInterface repository;
 
     // construtor
-    public DefaultCreateCategoryUseCase(final CategoryRepositoryInterface repository) {
+    public DefaultCreateCategoryUseCase(final CategoryGatewayInterface repository) {
         this.repository = Objects.requireNonNull(repository);
     }
 

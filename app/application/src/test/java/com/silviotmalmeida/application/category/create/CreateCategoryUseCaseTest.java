@@ -1,7 +1,7 @@
 // definição do pacote
 package com.silviotmalmeida.application.category.create;
 
-import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
 import com.silviotmalmeida.utils.Utils;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +25,7 @@ public class CreateCategoryUseCaseTest {
 
     // definindo o mock do repository
     @Mock
-    private CategoryRepositoryInterface repository;
+    private CategoryGatewayInterface repository;
 
     // definindo as ações a serem realizadas antes de cada teste
     // função para resetar os mocks

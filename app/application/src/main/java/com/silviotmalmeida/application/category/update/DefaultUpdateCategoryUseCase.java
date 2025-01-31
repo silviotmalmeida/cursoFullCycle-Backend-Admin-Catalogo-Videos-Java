@@ -3,7 +3,7 @@ package com.silviotmalmeida.application.category.update;
 
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryID;
-import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
 import com.silviotmalmeida.domain.exception.DomainException;
 import com.silviotmalmeida.domain.validation.Error;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
@@ -15,10 +15,10 @@ import java.util.Objects;
 public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
 
     // atributos
-    private final CategoryRepositoryInterface repository;
+    private final CategoryGatewayInterface repository;
 
     // construtor
-    public DefaultUpdateCategoryUseCase(final CategoryRepositoryInterface repository) {
+    public DefaultUpdateCategoryUseCase(final CategoryGatewayInterface repository) {
         this.repository = Objects.requireNonNull(repository);
     }
 

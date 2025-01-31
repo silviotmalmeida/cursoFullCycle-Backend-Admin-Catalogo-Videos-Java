@@ -3,7 +3,7 @@ package com.silviotmalmeida.application.category.delete;
 
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryID;
-import com.silviotmalmeida.domain.category.CategoryRepositoryInterface;
+import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
 import com.silviotmalmeida.domain.exception.DomainException;
 import com.silviotmalmeida.domain.validation.Error;
 
@@ -13,10 +13,10 @@ import java.util.Objects;
 public class DefaultDeleteCategoryUseCase extends DeleteCategoryUseCase {
 
     // atributos
-    private final CategoryRepositoryInterface repository;
+    private final CategoryGatewayInterface repository;
 
     // construtor
-    public DefaultDeleteCategoryUseCase(final CategoryRepositoryInterface repository) {
+    public DefaultDeleteCategoryUseCase(final CategoryGatewayInterface repository) {
         this.repository = Objects.requireNonNull(repository);
     }
 
