@@ -5,6 +5,7 @@ import com.silviotmalmeida.domain.AggregateRoot;
 import com.silviotmalmeida.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.Objects;
 
 // definindo a entidade
 public class Category extends AggregateRoot<CategoryID> implements Cloneable {
@@ -31,8 +32,8 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         this.name = name;
         this.description = description;
         this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createdAt = Objects.requireNonNull(createdAt, "'createdAt' should not be null");
+        this.updatedAt = Objects.requireNonNull(updatedAt, "'updatedAt' should not be null");
         this.deletedAt = deletedAt;
     }
 
@@ -145,6 +146,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         return deletedAt;
     }
 
+    // método de clonagem da entidade
     @Override
     public Category clone() {
         try {

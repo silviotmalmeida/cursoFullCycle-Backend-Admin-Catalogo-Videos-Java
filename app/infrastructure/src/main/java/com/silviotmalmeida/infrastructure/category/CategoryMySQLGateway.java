@@ -28,12 +28,7 @@ public class CategoryMySQLGateway implements CategoryGatewayInterface {
     // criação
     @Override
     public Category create(final Category category) {
-        // criando a model de entrada
-        final CategoryJpaModel inputModel = CategoryJpaModel.from(category);
-        // salvando no BD e obtendo a model de saída
-        final CategoryJpaModel outputModel = this.repository.save(inputModel);
-        // retornando a entidade gerada a partir dos dados persistidos no BD
-        return outputModel.toAggregate();
+        return save(category);
     }
 
     // listagem
@@ -50,13 +45,23 @@ public class CategoryMySQLGateway implements CategoryGatewayInterface {
 
     // atualização
     @Override
-    public Category update(Category category) {
-        return null;
+    public Category update(final Category category) {
+        return save(category);
     }
 
     // deleção por id
     @Override
     public boolean delete(CategoryID id) {
         return false;
+    }
+
+    // como no jpa o create e update são iguais, foi criado um método privado único
+    private Category save(final Category category) {
+        // criando a model de entrada
+        final CategoryJpaModel inputModel = CategoryJpaModel.from(category);
+        // salvando no BD e obtendo a model de saída
+        final CategoryJpaModel outputModel = this.repository.save(inputModel);
+        // retornando a entidade gerada a partir dos dados persistidos no BD
+        return outputModel.toAggregate();
     }
 }

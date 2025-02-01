@@ -2,6 +2,7 @@
 package com.silviotmalmeida.infrastructure.category;
 
 import com.silviotmalmeida.domain.category.Category;
+import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaModel;
 import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaRepositoryInterface;
 import com.silviotmalmeida.utils.Utils;
 import org.junit.jupiter.api.Assertions;
@@ -79,5 +80,42 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(categoryBD.getCreatedAt(), expectedCategory.getCreatedAt());
         Assertions.assertEquals(categoryBD.getUpdatedAt(), expectedCategory.getUpdatedAt());
         Assertions.assertEquals(categoryBD.getDeletedAt(), expectedCategory.getDeletedAt());
+    }
+
+    // teste de update
+    @Test
+    public void givenAValidCategory_whenCallsUpdate_shouldReturnAUpdatedCategory() {
+
+        // atributos esperados
+        final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String initialDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean initialIsActive = new Random().nextBoolean();
+
+        // criando a entidade
+        final Category category = Category.newCategory(initialName, initialDescription, initialIsActive);
+        final Category initialCategoryBD = repository.saveAndFlush(CategoryJpaModel.from(category)).toAggregate();
+
+        // atributos atualizados
+        final String updatedName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String updatedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean updateIsActive = !initialIsActive;
+
+        // atualizando a entidade
+        category.update(updatedName, updatedDescription, updateIsActive);
+
+        // executando o repository
+        final Category updatedCategoryBD = gateway.update(category);
+
+        // executando os testes
+        Assertions.assertEquals(1, repository.count());
+        Assertions.assertNotNull(updatedCategoryBD);
+        Assertions.assertEquals(updatedCategoryBD.getId(), initialCategoryBD.getId());
+        Assertions.assertNotEquals(updatedCategoryBD.getName(), initialCategoryBD.getName());
+        Assertions.assertNotEquals(updatedCategoryBD.getDescription(), initialCategoryBD.getDescription());
+        Assertions.assertNotEquals(updatedCategoryBD.isActive(), initialCategoryBD.isActive());
+        Assertions.assertEquals(updatedCategoryBD.getCreatedAt(), initialCategoryBD.getCreatedAt());
+        Assertions.assertTrue(updatedCategoryBD.getUpdatedAt().isAfter(initialCategoryBD.getUpdatedAt()));
+        if (updateIsActive) Assertions.assertNull(updatedCategoryBD.getDeletedAt());
+        if (!updateIsActive) Assertions.assertNotNull(updatedCategoryBD.getDeletedAt());
     }
 }
