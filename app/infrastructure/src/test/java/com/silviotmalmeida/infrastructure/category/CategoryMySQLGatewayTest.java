@@ -118,4 +118,102 @@ public class CategoryMySQLGatewayTest {
         if (updateIsActive) Assertions.assertNull(updatedCategoryBD.getDeletedAt());
         if (!updateIsActive) Assertions.assertNotNull(updatedCategoryBD.getDeletedAt());
     }
+
+    // teste de delete com id válido
+    @Test
+    public void givenAPrePersistedCategory_whenCallsDelete_shouldDeleteCategoryAndReturnTrue() {
+
+        // atributos esperados
+        final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String initialDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean initialIsActive = new Random().nextBoolean();
+
+        // criando a entidade
+        final Category category = Category.newCategory(initialName, initialDescription, initialIsActive);
+        final Category initialCategoryBD = repository.saveAndFlush(CategoryJpaModel.from(category)).toAggregate();
+
+        // executando os testes
+        Assertions.assertEquals(1, repository.count());
+
+        // executando o repository
+        final boolean sucess = gateway.delete(initialCategoryBD.getId());
+
+        // executando os testes
+        Assertions.assertEquals(0, repository.count());
+        Assertions.assertTrue(sucess);
+    }
+
+    // teste de delete com id inválido
+    @Test
+    public void givenAInvalidId_whenCallsDelete_shouldReturnFalse() {
+
+        // atributos esperados
+        final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String initialDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean initialIsActive = new Random().nextBoolean();
+
+        // criando a entidade, sem persistir no bd
+        final Category category = Category.newCategory(initialName, initialDescription, initialIsActive);
+
+        // executando os testes
+        Assertions.assertEquals(0, repository.count());
+
+        // executando o repository
+        final boolean sucess = gateway.delete(category.getId());
+
+        // executando os testes
+        Assertions.assertEquals(0, repository.count());
+        Assertions.assertFalse(sucess);
+    }
+
+    // teste de find com id válido
+    @Test
+    public void givenAPrePersistedCategory_whenCallsFind_shouldReturnACategory() {
+
+        // atributos esperados
+        final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String initialDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean initialIsActive = new Random().nextBoolean();
+
+        // criando a entidade
+        final Category category = Category.newCategory(initialName, initialDescription, initialIsActive);
+        final Category initialCategoryBD = repository.saveAndFlush(CategoryJpaModel.from(category)).toAggregate();
+
+        // executando o repository
+        final Category categoryBD = gateway.find(initialCategoryBD.getId()).orElse(null);
+
+        // executando os testes
+        Assertions.assertEquals(1, repository.count());
+        Assertions.assertNotNull(categoryBD);
+        Assertions.assertEquals(categoryBD.getId(), category.getId());
+        Assertions.assertEquals(categoryBD.getName(), category.getName());
+        Assertions.assertEquals(categoryBD.getDescription(), category.getDescription());
+        Assertions.assertEquals(categoryBD.isActive(), category.isActive());
+        Assertions.assertEquals(categoryBD.getCreatedAt(), category.getCreatedAt());
+        Assertions.assertEquals(categoryBD.getUpdatedAt(), category.getUpdatedAt());
+        Assertions.assertEquals(categoryBD.getDeletedAt(), category.getDeletedAt());
+    }
+
+    // teste de delete com id inválido
+    @Test
+    public void givenAInvalidId_whenCallsFind_shouldReturnEmpty() {
+
+        // atributos esperados
+        final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String initialDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean initialIsActive = new Random().nextBoolean();
+
+        // criando a entidade, sem persistir no bd
+        final Category category = Category.newCategory(initialName, initialDescription, initialIsActive);
+
+        // executando os testes
+        Assertions.assertEquals(0, repository.count());
+
+        // executando o repository
+        final Category categoryBD = gateway.find(category.getId()).orElse(null);
+
+        // executando os testes
+        Assertions.assertEquals(0, repository.count());
+        Assertions.assertNull(categoryBD);
+    }
 }

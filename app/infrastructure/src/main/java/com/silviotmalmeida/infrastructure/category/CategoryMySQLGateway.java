@@ -40,7 +40,7 @@ public class CategoryMySQLGateway implements CategoryGatewayInterface {
     // busca por id
     @Override
     public Optional<Category> find(CategoryID id) {
-        return Optional.empty();
+        return this.repository.findById(id.getValue()).map(CategoryJpaModel::toAggregate);
     }
 
     // atualização
@@ -52,7 +52,18 @@ public class CategoryMySQLGateway implements CategoryGatewayInterface {
     // deleção por id
     @Override
     public boolean delete(CategoryID id) {
-        return false;
+        // se o id existir
+        if (this.repository.existsById(id.getValue())) {
+            // remove o registro
+            this.repository.deleteById(id.getValue());
+            // retorna true
+            return true;
+        }
+        // senão
+        else {
+            // retorna false
+            return false;
+        }
     }
 
     // como no jpa o create e update são iguais, foi criado um método privado único
