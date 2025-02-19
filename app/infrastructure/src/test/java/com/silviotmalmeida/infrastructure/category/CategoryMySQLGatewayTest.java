@@ -2,6 +2,8 @@
 package com.silviotmalmeida.infrastructure.category;
 
 import com.silviotmalmeida.domain.category.Category;
+import com.silviotmalmeida.domain.category.CategorySearchQuery;
+import com.silviotmalmeida.domain.pagination.Pagination;
 import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaModel;
 import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaRepositoryInterface;
 import com.silviotmalmeida.utils.Utils;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.Random;
 
 // utilizando as configurações do profile test-integration, se quiser usar o h2
@@ -194,7 +197,7 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(categoryBD.getDeletedAt(), category.getDeletedAt());
     }
 
-    // teste de delete com id inválido
+    // teste de find com id inválido
     @Test
     public void givenAInvalidId_whenCallsFind_shouldReturnEmpty() {
 
@@ -215,5 +218,156 @@ public class CategoryMySQLGatewayTest {
         // executando os testes
         Assertions.assertEquals(0, repository.count());
         Assertions.assertNull(categoryBD);
+    }
+
+    // teste de paginate com lista existente na página 0
+    @Test
+    public void givenAPrePersistedCategories_whenCallsPaginatePage0_shouldReturnAPaginationOfCategories() {
+
+        // atributos esperados
+        final int expectedCurrentPage = 0;
+        final int expectedPerPage = 1;
+        final long expectedTotal = 3;
+        final Category expectedCategory1 = Category.newCategory(
+                "primeiro",
+                "",
+                new Random().nextBoolean());
+        final Category expectedCategory2 = Category.newCategory(
+                "segundo",
+                "",
+                new Random().nextBoolean());
+        final Category expectedCategory3 = Category.newCategory(
+                "terceiro",
+                "",
+                new Random().nextBoolean());
+        final List<Category> expectedItems = List.of(expectedCategory1, expectedCategory2, expectedCategory3);
+        // criando as entidades no BD
+        repository.saveAllAndFlush(List.of(
+                CategoryJpaModel.from(expectedCategory1),
+                CategoryJpaModel.from(expectedCategory2),
+                CategoryJpaModel.from(expectedCategory3)
+        ));
+
+        // criando a query com sort="asc" por name e sem busca, página 0
+        CategorySearchQuery query = new CategorySearchQuery(expectedCurrentPage, expectedPerPage, "", "name", "asc");
+
+        // executando o repository
+        Pagination<Category> categories = gateway.paginate(query);
+
+        // executando os testes
+        Assertions.assertEquals(expectedCurrentPage, categories.currentPage());
+        Assertions.assertEquals(expectedPerPage, categories.perPage());
+        Assertions.assertEquals(expectedTotal, categories.total());
+        Assertions.assertEquals(expectedPerPage, categories.items().size());
+        Assertions.assertEquals(expectedCategory1.getId(), categories.items().get(0).getId());
+    }
+
+    // teste de paginate com lista existente na página 1
+    @Test
+    public void givenAPrePersistedCategories_whenCallsPaginatePage1_shouldReturnAPaginationOfCategories() {
+
+        // atributos esperados
+        final int expectedCurrentPage = 1;
+        final int expectedPerPage = 1;
+        final long expectedTotal = 3;
+        final Category expectedCategory1 = Category.newCategory(
+                "primeiro",
+                "",
+                new Random().nextBoolean());
+        final Category expectedCategory2 = Category.newCategory(
+                "segundo",
+                "",
+                new Random().nextBoolean());
+        final Category expectedCategory3 = Category.newCategory(
+                "terceiro",
+                "",
+                new Random().nextBoolean());
+        final List<Category> expectedItems = List.of(expectedCategory1, expectedCategory2, expectedCategory3);
+        // criando as entidades no BD
+        repository.saveAllAndFlush(List.of(
+                CategoryJpaModel.from(expectedCategory1),
+                CategoryJpaModel.from(expectedCategory2),
+                CategoryJpaModel.from(expectedCategory3)
+        ));
+
+        // criando a query com sort="asc" por name e sem busca, página 1
+        CategorySearchQuery query = new CategorySearchQuery(expectedCurrentPage, expectedPerPage, "", "name", "asc");
+
+        // executando o repository
+        Pagination<Category> categories = gateway.paginate(query);
+
+        // executando os testes
+        Assertions.assertEquals(expectedCurrentPage, categories.currentPage());
+        Assertions.assertEquals(expectedPerPage, categories.perPage());
+        Assertions.assertEquals(expectedTotal, categories.total());
+        Assertions.assertEquals(expectedPerPage, categories.items().size());
+        Assertions.assertEquals(expectedCategory2.getId(), categories.items().get(0).getId());
+    }
+
+    // teste de paginate com lista existente filtrada
+    @Test
+    public void givenAPrePersistedCategories_whenCallsPaginateWithSearchFilters_shouldReturnAPaginationOfCategories() {
+
+        // atributos esperados
+        final int expectedCurrentPage = 0;
+        final int expectedPerPage = 1;
+        final long expectedTotal = 3;
+        final Category expectedCategory1 = Category.newCategory(
+                "primeiro",
+                "",
+                new Random().nextBoolean());
+        final Category expectedCategory2 = Category.newCategory(
+                "segundo",
+                "",
+                new Random().nextBoolean());
+        final Category expectedCategory3 = Category.newCategory(
+                "terceiro",
+                "",
+                new Random().nextBoolean());
+        final List<Category> expectedItems = List.of(expectedCategory1, expectedCategory2, expectedCategory3);
+        // criando as entidades no BD
+        repository.saveAllAndFlush(List.of(
+                CategoryJpaModel.from(expectedCategory1),
+                CategoryJpaModel.from(expectedCategory2),
+                CategoryJpaModel.from(expectedCategory3)
+        ));
+
+        // criando a query com terms="eiro" e sort="desc" por name, página 0
+        CategorySearchQuery query = new CategorySearchQuery(expectedCurrentPage, expectedPerPage, "eiro", "name", "desc");
+
+        // executando o repository
+        Pagination<Category> categories = gateway.paginate(query);
+
+        // executando os testes
+        Assertions.assertEquals(expectedCurrentPage, categories.currentPage());
+        Assertions.assertEquals(expectedPerPage, categories.perPage());
+        Assertions.assertEquals(2, categories.total());
+        Assertions.assertEquals(expectedPerPage, categories.items().size());
+        Assertions.assertEquals(expectedCategory3.getId(), categories.items().get(0).getId());
+
+        // criando a query com terms="undo" e sort="desc" por name, página 0
+        query = new CategorySearchQuery(expectedCurrentPage, expectedPerPage, "undo", "name", "desc");
+
+        // executando o repository
+        categories = gateway.paginate(query);
+
+        // executando os testes
+        Assertions.assertEquals(expectedCurrentPage, categories.currentPage());
+        Assertions.assertEquals(expectedPerPage, categories.perPage());
+        Assertions.assertEquals(1, categories.total());
+        Assertions.assertEquals(expectedPerPage, categories.items().size());
+        Assertions.assertEquals(expectedCategory2.getId(), categories.items().get(0).getId());
+
+        // criando a query com terms="nenhhum" e sort="desc" por name, página 0
+        query = new CategorySearchQuery(expectedCurrentPage, expectedPerPage, "nenhhum", "name", "desc");
+
+        // executando o repository
+        categories = gateway.paginate(query);
+
+        // executando os testes
+        Assertions.assertEquals(expectedCurrentPage, categories.currentPage());
+        Assertions.assertEquals(expectedPerPage, categories.perPage());
+        Assertions.assertEquals(0, categories.total());
+        Assertions.assertEquals(0, categories.items().size());
     }
 }

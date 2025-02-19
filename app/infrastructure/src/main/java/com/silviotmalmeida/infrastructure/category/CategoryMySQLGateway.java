@@ -8,8 +8,17 @@ import com.silviotmalmeida.domain.category.CategorySearchQuery;
 import com.silviotmalmeida.domain.pagination.Pagination;
 import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaModel;
 import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaRepositoryInterface;
+import com.silviotmalmeida.infrastructure.utils.SpecificationUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.Optional;
 
 // marcando como serviço
@@ -33,8 +42,38 @@ public class CategoryMySQLGateway implements CategoryGatewayInterface {
 
     // listagem
     @Override
-    public Pagination<Category> paginate(CategorySearchQuery query) {
-        return null;
+    public Pagination<Category> paginate(final CategorySearchQuery query) {
+
+        // organizando os parâmetros da paginação
+        final PageRequest pageRequest = PageRequest.of(
+                query.page(),
+                query.perPage(),
+                Sort.by(Sort.Direction.fromString(query.direction()), query.sortField())
+        );
+
+        // organizando a especificação da busca dinâmica
+        // se o parâmetro terms existir considera-o
+        // senão retorna null
+        // estão sendo considerados os atributos name e description na busca
+        final var specifications = Optional.ofNullable(query.terms())
+                .filter(str -> !str.isBlank())
+                .map(str -> {
+                    final Specification<CategoryJpaModel> nameLike = SpecificationUtils.like("name", str);
+                    final Specification<CategoryJpaModel> descriptionLike = SpecificationUtils.like("description", str);
+                    return nameLike.or(descriptionLike);
+                })
+                .orElse(null);
+
+        // realizando a busca
+        final Page<CategoryJpaModel> page = this.repository.findAll(Specification.where(specifications), pageRequest);
+
+        // retornando o pagination
+        return new Pagination<>(
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.map(CategoryJpaModel::toAggregate).stream().toList()
+        );
     }
 
     // busca por id
