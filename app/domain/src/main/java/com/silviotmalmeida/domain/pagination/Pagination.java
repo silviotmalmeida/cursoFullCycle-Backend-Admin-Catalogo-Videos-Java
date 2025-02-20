@@ -1,4 +1,4 @@
-// definição do pacote
+// definição do package
 package com.silviotmalmeida.domain.pagination;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-// definição do pacote
+// definição do package
 package com.silviotmalmeida.application.category.find;
 
 import com.silviotmalmeida.domain.category.Category;

@@ -1,4 +1,4 @@
-// definição do pacote
+// definição do package
 package com.silviotmalmeida.utils;
 
 // classe com métodos úteis para os testes

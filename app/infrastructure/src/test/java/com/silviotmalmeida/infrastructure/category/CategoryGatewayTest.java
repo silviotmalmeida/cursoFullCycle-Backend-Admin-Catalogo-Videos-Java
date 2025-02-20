@@ -32,7 +32,7 @@ import java.util.Random;
         // carregando o gateway
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*[MySQLGateway]")
 })
-public class CategoryMySQLGatewayTest {
+public class CategoryGatewayTest {
 
     // injetando o gateway
     @Autowired

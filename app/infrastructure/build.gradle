@@ -37,6 +37,8 @@ dependencies {
     implementation(project(":domain"))
     // incluindo a dependência para o módulo application
     implementation(project(":application"))
+    // incluindo a dependência para o módulo vavr
+    implementation 'io.vavr:vavr:0.10.5'
 
     // incluindo a dependência do conector do mysql
     implementation('mysql:mysql-connector-java')

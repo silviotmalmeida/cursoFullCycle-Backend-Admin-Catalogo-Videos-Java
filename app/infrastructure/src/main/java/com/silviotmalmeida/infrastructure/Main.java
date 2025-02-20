@@ -1,5 +1,10 @@
 package com.silviotmalmeida.infrastructure;
 
+import com.silviotmalmeida.application.category.create.CreateCategoryUseCase;
+import com.silviotmalmeida.application.category.delete.DeleteCategoryUseCase;
+import com.silviotmalmeida.application.category.find.FindCategoryUseCase;
+import com.silviotmalmeida.application.category.paginate.PaginateCategoryUseCase;
+import com.silviotmalmeida.application.category.update.UpdateCategoryUseCase;
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaModel;
 import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaRepositoryInterface;
@@ -12,6 +17,7 @@ import org.springframework.core.env.AbstractEnvironment;
 
 import java.util.List;
 
+// classe inicial do Spring
 // declarando como SpringBootApplication
 @SpringBootApplication
 public class Main {
@@ -21,9 +27,10 @@ public class Main {
         // iniciando o Spring
         SpringApplication.run(WebServerConfig.class, args);
     }
-//
+
+//    // teste básico do repository
 //    @Bean
-//    public ApplicationRunner runner(CategoryJpaRepositoryInterface repository){
+//    public ApplicationRunner runner1(CategoryJpaRepositoryInterface repository){
 //        return args -> {
 //            List<CategoryJpaModel> all1 = repository.findAll();
 //            System.out.println(all1);
@@ -40,6 +47,18 @@ public class Main {
 //            System.out.println(all2);
 //
 //            repository.deleteAll();
+//        };
+//    }
+//
+//    // teste básico do de injeção do gateway nos usecases
+//    @Bean
+//    public ApplicationRunner runner2(CreateCategoryUseCase createCategoryUseCase,
+//                                     DeleteCategoryUseCase deleteCategoryUseCase,
+//                                     FindCategoryUseCase findCategoryUseCase,
+//                                     PaginateCategoryUseCase paginateCategoryUseCase,
+//                                     UpdateCategoryUseCase updateCategoryUseCase){
+//        return args -> {
+//
 //        };
 //    }
 }

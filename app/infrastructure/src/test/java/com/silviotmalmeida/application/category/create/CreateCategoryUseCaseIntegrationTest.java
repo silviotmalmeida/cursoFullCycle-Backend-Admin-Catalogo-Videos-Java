@@ -1,37 +1,53 @@
-// definição do package
+// definicao do package
 package com.silviotmalmeida.application.category.create;
 
 import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
 import com.silviotmalmeida.domain.validation.handler.NotificationValidationHandler;
+import com.silviotmalmeida.infrastructure.category.persistence.CategoryJpaRepositoryInterface;
+import com.silviotmalmeida.infrastructure.configuration.WebServerConfig;
 import com.silviotmalmeida.utils.Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.AdditionalAnswers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Random;
 
-@ExtendWith(MockitoExtension.class)
-public class CreateCategoryUseCaseTest {
+// utilizando as configurações do profile test-integration, se quiser usar o h2
+//@ActiveProfiles("test-integration")
+// utilizando as configurações do profile development, se quiser usar o mysql
+@ActiveProfiles("development")
+// sinalizando para o spring que será um teste
+@SpringBootTest(classes = WebServerConfig.class)
+public class CreateCategoryUseCaseIntegrationTest {
 
-    // definindo o usecase que vai receber o mock do repository
-    @InjectMocks
-    private DefaultCreateCategoryUseCase usecase;
+    // injetando os usecases
+    @Autowired
+    private CreateCategoryUseCase usecase;
 
-    // definindo o mock do repository
-    @Mock
-    private CategoryGatewayInterface repository;
+    // injetando o repository
+    @Autowired
+    private CategoryJpaRepositoryInterface repository;
 
-    // definindo as ações a serem realizadas antes de cada teste
-    // função para resetar os mocks
+    // injetando o gateway para espionar os métodos
+    @SpyBean
+    private CategoryGatewayInterface gateway;
+
+    // ativando a limpeza do bd antes de cada teste
     @BeforeEach
     void cleanUp() {
-        Mockito.reset(repository);
+        this.repository.deleteAll();
+    }
+
+    // testando a injeção de dependências
+    @Test
+    public void testInjectedDependencies() {
+        Assertions.assertNotNull(usecase);
+        Assertions.assertNotNull(repository);
     }
 
     // teste de caminho feliz
@@ -43,11 +59,11 @@ public class CreateCategoryUseCaseTest {
         final String expectedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
         final boolean expectedIsActive = new Random().nextBoolean();
 
+        // executando os testes
+        Assertions.assertEquals(0, repository.count());
+
         // criando o input
         final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
-
-        // definindo o comportamento do create (recebe qualquer coisa e retorna o primeiro argumento passado ao método)
-        Mockito.when(repository.create(Mockito.any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         // executando o usecase
         final var result = usecase.execute(input);
@@ -55,6 +71,7 @@ public class CreateCategoryUseCaseTest {
         final var notification = output == null ? result.getLeft() : null;
 
         // executando os testes
+        Assertions.assertEquals(1, repository.count());
         Assertions.assertInstanceOf(CreateCategoryOutput.class, output);
         Assertions.assertNotNull(output);
         Assertions.assertNotNull(output.id());
@@ -65,10 +82,22 @@ public class CreateCategoryUseCaseTest {
         Assertions.assertNotNull(output.updatedAt());
         if (expectedIsActive) Assertions.assertNull(output.deletedAt());
         if (!expectedIsActive) Assertions.assertNotNull(output.deletedAt());
-
         Assertions.assertNull(notification);
 
-        Mockito.verify(repository, Mockito.times(1)).create(Mockito.any());
+        // obtendo a entidade persistida no BD
+        final var actualCategory = repository.findById(output.id()).orElse(null);
+
+        // executando os testes
+        Assertions.assertNotNull(actualCategory);
+        Assertions.assertNotNull(actualCategory.getId());
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertNotNull(actualCategory.getCreatedAt());
+        Assertions.assertNotNull(actualCategory.getUpdatedAt());
+        if (expectedIsActive) Assertions.assertNull(actualCategory.getDeletedAt());
+        if (!expectedIsActive) Assertions.assertNotNull(actualCategory.getDeletedAt());
+        Mockito.verify(gateway, Mockito.times(1)).create(Mockito.any());
     }
 
     // teste de name inválido
@@ -82,6 +111,9 @@ public class CreateCategoryUseCaseTest {
         final int expectedErrorCount = 1;
         final String expectedErrorMessage = "'name' should not be null";
 
+        // executando os testes
+        Assertions.assertEquals(0, repository.count());
+
         // criando o input
         final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
@@ -92,12 +124,11 @@ public class CreateCategoryUseCaseTest {
 
         // executando os testes
         Assertions.assertNull(output);
-
         Assertions.assertInstanceOf(NotificationValidationHandler.class, notification);
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
-
-        Mockito.verify(repository, Mockito.times(0)).create(Mockito.any());
+        Assertions.assertEquals(0, repository.count());
+        Mockito.verify(gateway, Mockito.times(0)).create(Mockito.any());
     }
 
     // teste de erro interno do repository
@@ -110,16 +141,19 @@ public class CreateCategoryUseCaseTest {
         final boolean expectedIsActive = new Random().nextBoolean();
         final String expectedErrorMessage = "Repository error";
 
+        // executando os testes
+        Assertions.assertEquals(0, repository.count());
+
         // criando o input
         final CreateCategoryInput input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
         // definindo o comportamento do create (lançando exceção interna)
-        Mockito.when(repository.create(Mockito.any())).thenThrow(new IllegalStateException(expectedErrorMessage));
+        Mockito.doThrow(new IllegalStateException(expectedErrorMessage)).when(gateway).create(Mockito.any());
 
         // executando os testes
         final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> usecase.execute(input));
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
-
-        Mockito.verify(repository, Mockito.times(1)).create(Mockito.any());
+        Assertions.assertEquals(0, repository.count());
+        Mockito.verify(gateway, Mockito.times(1)).create(Mockito.any());
     }
 }

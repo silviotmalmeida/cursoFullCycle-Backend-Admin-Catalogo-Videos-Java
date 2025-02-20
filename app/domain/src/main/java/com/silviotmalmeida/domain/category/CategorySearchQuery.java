@@ -1,4 +1,4 @@
-// definição do pacote
+// definição do package
 package com.silviotmalmeida.domain.category;
 
 // responsável por reunir os critérios de busca na listagem

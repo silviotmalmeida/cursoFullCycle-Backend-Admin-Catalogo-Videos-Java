@@ -1,4 +1,4 @@
-// definição do pacote
+// definição do package
 package com.silviotmalmeida.application.category.delete;
 
 import com.silviotmalmeida.application.UseCase;
