@@ -41,16 +41,16 @@ public class FindCategoryUseCaseTest {
     public void givenValidInput_whenCallsFindCategory_shouldReturnValidOutput() {
 
         // atributos esperados
-        final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
-        final String initialDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
-        final boolean initialIsActive = new Random().nextBoolean();
-        final Category initialCategory = Category.newCategory(initialName, initialDescription, initialIsActive);
+        final String expectedName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String expectedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean expectedIsActive = new Random().nextBoolean();
+        final Category expectedCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
         // criando o input
-        final String input = initialCategory.getId().getValue();
+        final String input = expectedCategory.getId().getValue();
 
         // definindo o comportamento do find (recebe o id e retorna a entidade clonada)
-        Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenReturn(Optional.of(initialCategory.clone()));
+        Mockito.when(repository.find(Mockito.eq(expectedCategory.getId()))).thenReturn(Optional.of(expectedCategory.clone()));
 
         // executando o usecase
         final FindCategoryOutput output = usecase.execute(input);
@@ -59,13 +59,13 @@ public class FindCategoryUseCaseTest {
         Assertions.assertInstanceOf(FindCategoryOutput.class, output);
         Assertions.assertNotNull(output);
         Assertions.assertNotNull(output.id());
-        Assertions.assertEquals(initialCategory.getId().getValue(), output.id());
-        Assertions.assertEquals(initialName, output.name());
-        Assertions.assertEquals(initialDescription, output.description());
-        Assertions.assertEquals(initialIsActive, output.isActive());
-        Assertions.assertEquals(initialCategory.getCreatedAt(), output.createdAt());
-        Assertions.assertEquals(initialCategory.getUpdatedAt(), output.updatedAt());
-        Assertions.assertEquals(initialCategory.getDeletedAt(), output.deletedAt());
+        Assertions.assertEquals(expectedCategory.getId().getValue(), output.id());
+        Assertions.assertEquals(expectedName, output.name());
+        Assertions.assertEquals(expectedDescription, output.description());
+        Assertions.assertEquals(expectedIsActive, output.isActive());
+        Assertions.assertEquals(expectedCategory.getCreatedAt(), output.createdAt());
+        Assertions.assertEquals(expectedCategory.getUpdatedAt(), output.updatedAt());
+        Assertions.assertEquals(expectedCategory.getDeletedAt(), output.deletedAt());
 
         Mockito.verify(repository, Mockito.times(1)).find(Mockito.any());
     }
@@ -98,17 +98,17 @@ public class FindCategoryUseCaseTest {
     public void givenValidInput_whenRepositoryThrowsException_shouldReturnException() {
 
         // atributos esperados
-        final String initialName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
-        final String initialDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
-        final boolean initialIsActive = new Random().nextBoolean();
-        final Category initialCategory = Category.newCategory(initialName, initialDescription, initialIsActive);
+        final String expectedName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
+        final String expectedDescription = Utils.getAlphaNumericString(new Random().nextInt(0, 255));
+        final boolean expectedIsActive = new Random().nextBoolean();
+        final Category expectedCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
         final String expectedErrorMessage = "Repository error";
 
         // criando o input
-        final String input = initialCategory.getId().getValue();
+        final String input = expectedCategory.getId().getValue();
 
         // definindo o comportamento do find (recebe o id e lança exceção interna)
-        Mockito.when(repository.find(Mockito.eq(initialCategory.getId()))).thenThrow(new IllegalStateException(expectedErrorMessage));
+        Mockito.when(repository.find(Mockito.eq(expectedCategory.getId()))).thenThrow(new IllegalStateException(expectedErrorMessage));
 
         // executando os testes
         final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> usecase.execute(input));
