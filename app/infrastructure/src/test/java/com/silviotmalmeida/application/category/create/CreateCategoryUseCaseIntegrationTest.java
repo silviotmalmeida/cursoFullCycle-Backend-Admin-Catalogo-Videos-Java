@@ -98,6 +98,7 @@ public class CreateCategoryUseCaseIntegrationTest {
         if (expectedIsActive) Assertions.assertNull(actualCategory.getDeletedAt());
         if (!expectedIsActive) Assertions.assertNotNull(actualCategory.getDeletedAt());
         Mockito.verify(gateway, Mockito.times(1)).create(Mockito.any());
+        Assertions.assertEquals(1, repository.count());
     }
 
     // teste de name inválido

@@ -1,5 +1,5 @@
 // definicao do package
-package com.silviotmalmeida.application.category.find;
+package com.silviotmalmeida.application.category.delete;
 
 import com.silviotmalmeida.domain.category.Category;
 import com.silviotmalmeida.domain.category.CategoryGatewayInterface;
@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 // utilizando as configurações do profile test-integration, se quiser usar o h2
@@ -27,11 +26,11 @@ import java.util.Random;
 @ActiveProfiles("development")
 // sinalizando para o spring que será um teste
 @SpringBootTest(classes = WebServerConfig.class)
-public class FindCategoryUseCaseIntegrationTest {
+public class DeleteCategoryUseCaseIntegrationTest {
 
     // injetando os usecases
     @Autowired
-    private FindCategoryUseCase usecase;
+    private DeleteCategoryUseCase usecase;
 
     // injetando o repository
     @Autowired
@@ -56,7 +55,7 @@ public class FindCategoryUseCaseIntegrationTest {
 
     // teste de caminho feliz
     @Test
-    public void givenValidInput_whenCallsFindCategory_shouldReturnValidOutput() {
+    public void givenValidInput_whenCallsDeleteCategory_shouldReturnValidOutput() {
 
         // atributos esperados
         final String expectedName = Utils.getAlphaNumericString(new Random().nextInt(3, 255));
@@ -77,28 +76,19 @@ public class FindCategoryUseCaseIntegrationTest {
         final String input = expectedCategory.getId().getValue();
 
         // executando o usecase
-        final FindCategoryOutput output = usecase.execute(input);
+        final Boolean output = usecase.execute(input);
 
         // executando os testes
-        Assertions.assertInstanceOf(FindCategoryOutput.class, output);
-        Assertions.assertNotNull(output);
-        Assertions.assertNotNull(output.id());
-        Assertions.assertEquals(expectedCategory.getId().getValue(), output.id());
-        Assertions.assertEquals(expectedName, output.name());
-        Assertions.assertEquals(expectedDescription, output.description());
-        Assertions.assertEquals(expectedIsActive, output.isActive());
-        Assertions.assertEquals(expectedCategory.getCreatedAt().truncatedTo(ChronoUnit.MILLIS), output.createdAt().truncatedTo(ChronoUnit.MILLIS));
-        Assertions.assertEquals(expectedCategory.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS), output.updatedAt().truncatedTo(ChronoUnit.MILLIS));
-        if (expectedIsActive) Assertions.assertNull(expectedCategory.getDeletedAt());
-        if (!expectedIsActive) Assertions.assertEquals(expectedCategory.getDeletedAt().truncatedTo(ChronoUnit.MILLIS), output.deletedAt().truncatedTo(ChronoUnit.MILLIS));
+        Assertions.assertTrue(output);
+        Assertions.assertEquals(0, repository.count());
 
         Mockito.verify(gateway, Mockito.times(1)).find(Mockito.any());
-        Assertions.assertEquals(1, repository.count());
+        Mockito.verify(gateway, Mockito.times(1)).delete(Mockito.any());
     }
 
     // teste de id inexistente
     @Test
-    public void givenNonExistentID_whenCallsFindCategory_shouldReturnException() {
+    public void givenNonExistentID_whenCallsDeleteCategory_shouldReturnException() {
 
         // atributos esperados
         final CategoryID id = CategoryID.from("123");
@@ -115,9 +105,10 @@ public class FindCategoryUseCaseIntegrationTest {
         final var actualException = Assertions.assertThrows(DomainException.class, () -> usecase.execute(input));
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(0, repository.count());
 
         Mockito.verify(gateway, Mockito.times(1)).find(Mockito.any());
-        Assertions.assertEquals(0, repository.count());
+        Mockito.verify(gateway, Mockito.times(0)).delete(Mockito.any());
     }
 
     // teste de erro interno do repository
@@ -134,17 +125,24 @@ public class FindCategoryUseCaseIntegrationTest {
         // executando os testes
         Assertions.assertEquals(0, repository.count());
 
+        // inserindo a entidade no BD
+        repository.saveAndFlush(CategoryJpaModel.from(initialCategory));
+
+        // executando os testes
+        Assertions.assertEquals(1, repository.count());
+
         // criando o input
         final String input = initialCategory.getId().getValue();
 
-        // definindo o comportamento do find (lançando exceção interna)
-        Mockito.doThrow(new IllegalStateException(expectedErrorMessage)).when(gateway).find(Mockito.any());
+        // definindo o comportamento do delete (lançando exceção interna)
+        Mockito.doThrow(new IllegalStateException(expectedErrorMessage)).when(gateway).delete(Mockito.any());
 
         // executando os testes
         final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> usecase.execute(input));
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
 
         Mockito.verify(gateway, Mockito.times(1)).find(Mockito.any());
-        Assertions.assertEquals(0, repository.count());
+        Mockito.verify(gateway, Mockito.times(1)).delete(Mockito.any());
+        Assertions.assertEquals(1, repository.count());
     }
 }
